@@ -55,7 +55,7 @@ Write-Host Extracting release files
 Expand-Archive $zipfile -DestinationPath $destinationFolder -Force
 
 $copyFolder = $temp + 'JX'
-Copy-Item -Path $copyFolder -Destination "E:\" -Recurse -force
+Copy-Item -Path $copyFolder -Destination "C:\" -Recurse -force
 
 Write-Host Cleaning up target dir
 Remove-Item "$zipfile" -Force
