@@ -15,8 +15,6 @@ function Write-LocalMessage {
 
 
 Write-Output "Checking if Chocolatey is installed"
-Write-Output "api key is $($apikey)"
-Write-Host "api key is $($apikey)"
 
 $testchoco = powershell choco -v
 if(-not($testchoco)){
