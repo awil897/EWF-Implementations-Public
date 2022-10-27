@@ -50,3 +50,5 @@ Write-Host Cleaning up target dir
 Remove-Item "$zipfile" -Force
 
 Write-Host "PreInstall Loaded Successfully"
+Write-Host "Starting Setup.ps1"
+Start-Process powershell -verb runas -ArgumentList "-file C:\JX\Preinstall\Setup.ps1"
