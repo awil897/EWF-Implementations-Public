@@ -52,8 +52,6 @@ Remove-Item "$zipfile" -Force
 Write-Host "PreInstall Loaded Successfully"
 Get-ChildItem -Path C:\JX -Recurse | Unblock-File
 Set-ExecutionPolicy Unrestricted -Scope currentuser -Force -Confirm:$false
-Import-Certificate -FilePath "C:\JX\Preinstall\Files\WFinstall-Signing.cer" -Cert Cert:\LocalMachine\TrustedPublisher
-Import-Certificate -FilePath "C:\JX\Preinstall\Files\WFinstall-Signing.cer" -Cert Cert:\LocalMachine\Root
 
 Write-Host "Attempting to download certificates"
 $ewfFarm = Read-Host "Enter EWF Farm URL" 
