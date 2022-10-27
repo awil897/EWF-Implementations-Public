@@ -50,5 +50,37 @@ Write-Host Cleaning up target dir
 Remove-Item "$zipfile" -Force
 
 Write-Host "PreInstall Loaded Successfully"
+Get-ChildItem -Path C:\JX -Recurse | Unblock-File
+Set-ExecutionPolicy Unrestricted -Scope currentuser -Force -Confirm:$false
+Import-Certificate -FilePath "C:\JX\Preinstall\Files\WFinstall-Signing.cer" -Cert Cert:\LocalMachine\TrustedPublisher
+Import-Certificate -FilePath "C:\JX\Preinstall\Files\WFinstall-Signing.cer" -Cert Cert:\LocalMachine\Root
+
+Write-Host "Attempting to download certificates"
+$ewfFarm = Read-Host "Enter EWF Farm URL" 
+
+$filename = $ewfFarm.Substring($ewfFarm.LastIndexOf("/") + 1)
+$prefix = $filename.Split('.')[0]
+
+if ($prefix -like "EWF"){
+    $rpName = $ewfFarm.Replace('EWF','RP-EWF')
+    $rpName = $rpName.Replace('.com','.com.pfx')
+    $ewfFarm = $ewfFarm.Replace('.com','.com.pfx')
+}
+
+if ($prefix -like "EWF-UAT"){
+    $rpName = $ewfFarm.Replace('EWF-UAT','RP-EWF')
+      $rpName = $rpName.Replace('.com','.com.pfx')
+    $ewfFarm = $ewfFarm.Replace('.com','.com.pfx')
+}
+
+$certsToDownload = @($ewfFarm,$rpName)
+$certsString = $certsToDownload -join ", "
+
+
+Write-Host "Checking Repository for $certsString"
+foreach ($cert in $certsToDownload){
+    download-file-from-github-repo -repoPath "certs" -repoFilename $cert -repoName "EWF-Implementations-Certificates" -repoOwner "JHAEISIS"  -token $apikey -destination $destination
+}
+
 Write-Host "Starting Setup.ps1"
 Start-Process powershell -verb runas -ArgumentList "-file C:\JX\Preinstall\Setup.ps1"
