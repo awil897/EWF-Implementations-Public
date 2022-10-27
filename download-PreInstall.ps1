@@ -98,7 +98,7 @@ $certsString = $certsToDownload -join ", "
 
 Write-Host "Checking Repository for $certsString"
 foreach ($cert in $certsToDownload){
-    download-file-from-github-repo -repoPath "certs" -repoFilename $cert -repoName "EWF-Implementations-Certificates" -repoOwner "JHAEISIS"  -token $apikey -destination $destination
+    download-file-from-github-repo -repoPath "certs" -repoFilename $cert -repoName "EWF-Implementations-Certificates" -repoOwner "JHAEISIS"  -token $apikey -destination "C:\JX\Preinstall\Certs"
 }
 
 Write-Host "Starting Setup.ps1"
