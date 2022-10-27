@@ -12,6 +12,27 @@ function Write-LocalMessage {
     if (Test-Path function:Write-Message) { Write-Message -Level Output -Message $Message }
     else { Write-Host $Message }
 }
+function download-file-from-github-repo($repoPath, $repoFilename, $repoName, $repoOwner, $message, $token, $destination) {
+
+
+    $url = "https://api.github.com/repos/$repoOwner/$repoName/contents/$repoPath/$repoFilename"
+
+    try {
+        $response = invoke-restMethod $url -headers @{Authorization = "bearer $token"}
+    }
+    catch {
+            write-host '$repoFileName cannot be found in repository' -ForegroundColor Red
+
+            return
+    }
+    write-output "$repoFilename found. Copying to $destination"
+    $fullDestination = "$destination\$repofilename"
+    $base64 = $response.content
+    $bytes = [Convert]::FromBase64String($base64)
+    [IO.File]::WriteAllBytes($fullDestination, $bytes)
+    Write-Host "$repoFilename successfully copied to $destination" -ForegroundColor Green
+    
+}
 
 
 $temp = ([System.IO.Path]::GetTempPath())
