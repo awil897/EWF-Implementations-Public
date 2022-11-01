@@ -24,6 +24,9 @@ param(
     #Connection is good
     Write-Host -ForegroundColor Green "$(Get-Date): Connection up!"
 }
+
+$ErrorActionPreference = "Continue"
+
 Write-Host "Testing connection to required websites"
 
 Try {
