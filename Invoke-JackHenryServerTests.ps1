@@ -24,11 +24,33 @@ param(
     #Connection is good
     Write-Host -ForegroundColor Green "$(Get-Date): Connection up!"
 }
+Function Test-SQL{
+    param (
+        [string]$dbconnection
+    )
+
+    $connectionString = "Data Source=$dbconnection;Integrated Security=true;Initial Catalog=master;Connect Timeout=3;"
+    $sqlConn = new-object ("Data.SqlClient.SqlConnection") $connectionString
+    trap{
+        Write-Host "Cannot connect."
+        $sqlResult = "Failed"
+    }
+    $sqlConn.Open()
+    if ($sqlConn.State -eq 'Open'){
+        $sqlConn.Close();
+        $sqlResult = "Successful"
+        Write-Host "Success!" -ForegroundColor Green
+    }
+    return $sqlResult   
+}
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $ErrorActionPreference = "Continue"
 
 Write-Host "Please enter the EWF application farm URL" -ForegroundColor Yellow 
 $ewfFarm = Read-Host
+Write-Host "Please enter the SQL Server and Instance Name (ex. EWFDB01\Workflow)"
+$ewfSQL = Read-Host
+
 
 Write-host "`nChecking DNS for $ewfFarm"
 Try {
@@ -52,11 +74,22 @@ Catch {
 }
 Start-Sleep -Seconds 1
 
+Write-host "`nChecking connectivity to $ewfSql"
+Try {
+    $sqlResult = Test-SQL -dbconnection $ewfSQL
+}
+Catch {
+    Write-Host "Error connecting to SQL Server"
+    $sqlResult = "Failed"
+    Start-Sleep -Seconds 1
+}
+Start-Sleep -Seconds 1
+
 Write-Host "`nTesting connection to required websites" -ForegroundColor Yellow
 Start-Sleep -Seconds 1
 Write-Host "Checking jhadownloads.JackHenry.com"
 Try {
-    $response = (Invoke-WebRequest "https://jhadownloads.jackhenry.com" -UseBasicParsing).StatusCode
+    $response = (Invoke-WebRequest "https://jhadownloads.jackhenry.com").StatusCode
     if ($response -like "200"){
         $jackhenryTest = "Successful"
         Write-Host "Success!" -ForegroundColor Green
@@ -77,7 +110,7 @@ Catch {
 Start-Sleep -Seconds 1
 Write-Host "Checking secure.JHAHosted.com"
 Try {
-    $response = (Invoke-WebRequest "https://secure.jhahosted.com" -UseBasicParsing).StatusCode
+    $response = (Invoke-WebRequest "https://secure.jhahosted.com").StatusCode
     if ($response -like "200"){
         $jhahostedTest = "Successful"
         Write-Host "Success!" -ForegroundColor Green
@@ -98,7 +131,7 @@ Catch {
 Start-Sleep -Seconds 1
 Write-Host "Checking go.Microsoft.com"
 Try {
-    $response = (Invoke-WebRequest "https://go.Microsoft.com" -UseBasicParsing).StatusCode
+    $response = (Invoke-WebRequest "https://go.Microsoft.com").StatusCode
     if ($response -like "200"){
         $MicrosoftTest = "Successful"
         Write-Host "Success!" -ForegroundColor Green
@@ -119,7 +152,7 @@ Catch {
 Start-Sleep -Seconds 1
 Write-Host "Checking api.Github.com"
 Try {
-    $response = (Invoke-WebRequest "https://api.Github.com" -UseBasicParsing).StatusCode
+    $response = (Invoke-WebRequest "https://api.Github.com").StatusCode
     if ($response -like "200"){
         $GithubTest = "Successful"
         Write-Host "Success!" -ForegroundColor Green
@@ -221,7 +254,7 @@ if (-not (Test-Path -LiteralPath $outputDir)) {
 }
 if (Test-Path -LiteralPath $outputDir) {
     try {
-        $filename = "$outputDir\Results_$(Get-Date -UFormat '%Y%m%d_%H%M%S')_EWF_appserver.$env:COMPUTERNAME.csv" 
+        $filename = "$outputDir\Resulst_$(Get-Date -UFormat '%Y%m%d-%H%M%S')_EWF_appserver.$env:COMPUTERNAME.csv" 
         $testResults | Export-Csv -LiteralPath $filename -NoTypeInformation
         Write-Host "Log created in $outputDir"
         Write-Host "$filename"
