@@ -221,7 +221,7 @@ if (-not (Test-Path -LiteralPath $outputDir)) {
 }
 if (Test-Path -LiteralPath $outputDir) {
     try {
-        $filename = "$outputDir\Resulst_$(Get-Date -UFormat '%Y%m%d-%H%M%S')_EWF_appserver.$env:COMPUTERNAME.csv" 
+        $filename = "$outputDir\Results_$(Get-Date -UFormat '%Y%m%d_%H%M%S')_EWF_appserver.$env:COMPUTERNAME.csv" 
         $testResults | Export-Csv -LiteralPath $filename -NoTypeInformation
         Write-Host "Log created in $outputDir"
         Write-Host "$filename"
