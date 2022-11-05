@@ -361,7 +361,7 @@ $testResults = New-Object -TypeName PSObject -Property ([ordered]@{
     'Server Hostname' = $env:COMPUTERNAME
 })
 
-Write-Host "`nPlease screenshot or copy the results below to jhaenterpriseworkflowimplementation@jackhenry.com" -BackgroundColor Yellow -ForegroundColor Black
+Write-Host "`nPlease screenshot or copy the results below and email to jhaEnterpriseWorkflowImplementation@jackhenry.com" -BackgroundColor Yellow -ForegroundColor Black
 Write-Host "If you have multiple EWF application servers, please repeat this process on those additional servers"
 
 Start-Sleep -Seconds 2
