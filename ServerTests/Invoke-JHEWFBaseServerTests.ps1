@@ -214,7 +214,7 @@ Write-Host "`nTesting connection to required websites" -ForegroundColor Yellow
 Start-Sleep -Seconds 1
 Write-Host "Checking jhadownloads.JackHenry.com"
 Try {
-    $response = (Invoke-WebRequest "https://jhadownloads.jackhenry.com").StatusCode
+    $response = (Invoke-WebRequest "https://jhadownloads.jackhenry.com" -UseBasicParsing).StatusCode
     if ($response -like "200"){
         $jackhenryTest = "Successful"
         Write-Host "Success!" -ForegroundColor Green
@@ -235,7 +235,7 @@ Catch {
 Start-Sleep -Seconds 1
 Write-Host "Checking secure.JHAHosted.com"
 Try {
-    $response = (Invoke-WebRequest "https://secure.jhahosted.com").StatusCode
+    $response = (Invoke-WebRequest "https://secure.jhahosted.com" -UseBasicParsing).StatusCode
     if ($response -like "200"){
         $jhahostedTest = "Successful"
         Write-Host "Success!" -ForegroundColor Green
@@ -256,7 +256,7 @@ Catch {
 Start-Sleep -Seconds 1
 Write-Host "Checking go.Microsoft.com"
 Try {
-    $response = (Invoke-WebRequest "https://go.Microsoft.com").StatusCode
+    $response = (Invoke-WebRequest "https://go.Microsoft.com" -UseBasicParsing).StatusCode
     if ($response -like "200"){
         $MicrosoftTest = "Successful"
         Write-Host "Success!" -ForegroundColor Green
@@ -277,7 +277,7 @@ Catch {
 Start-Sleep -Seconds 1
 Write-Host "Checking api.Github.com"
 Try {
-    $response = (Invoke-WebRequest "https://api.Github.com").StatusCode
+    $response = (Invoke-WebRequest "https://api.Github.com" -UseBasicParsing).StatusCode
     if ($response -like "200"){
         $GithubTest = "Successful"
         Write-Host "Success!" -ForegroundColor Green
