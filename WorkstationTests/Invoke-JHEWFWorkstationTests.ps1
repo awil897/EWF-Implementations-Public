@@ -564,6 +564,7 @@ function Test-Endpoint{
         }
         Start-Sleep -Seconds 1
     }
+
     if ($isIpAddress -like "True"){
         Write-Host "$endpoint is an IP address, skipping DNS tests"
         $dnsTest = "Test Skipped"
@@ -591,7 +592,7 @@ function Test-Endpoint{
             }
         }
     }
-
+    if ($dnsResult -like 'Error'){$portTest = "Test Skipped"}
     if ($dnsResult -like 'Successful') {
         $endpointIp = ($dnsTest | Select-Object -First 1)
         Write-host "Checking connectivity to $endpointIp on port 443"
@@ -617,13 +618,15 @@ function Test-Endpoint{
             }
         }
     }
-    
-    $endpointResults = ([ordered]@{
+    $endpointResults = [PSCustomObject]@{
         'Endpoint Address' = $Endpoint
         'DNS Records' = $dnsTest
         'DNS Result' = $dnsResult
-        'Port 443 Connection Test' = $portTest
-    })
+        'Port 443' = $portTest
+    }
+
+
+  
     Start-Sleep -Seconds 1
     return $endpointResults
 }
@@ -691,4 +694,36 @@ switch ($testItem) {
         break
     }
 }
+Write-Host "`nChecking if .NET 4.8 is installed"
+Try {
+    $dotNetInstalled = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full").Release -ge 528040
+    Write-Host "Check Complete!" -ForegroundColor Green
+    Write-Host ".NET Framework 4.8 Installed - $dotNetInstalled" -ForegroundColor Yellow
+}
+Catch{
+    $dotNetInstalled = ".NET Version Unavailable"
+    Write-Host "There was an issue verifying this application"
+    Start-Sleep -Seconds 1
+}
+Start-Sleep -Seconds 1
+
+#Getting full list of installed software
+$installedSoftware = Get-ChildItem "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall"
+$installedList = foreach($obj in $InstalledSoftware){$obj.GetValue('DisplayName') + " - " + $obj.GetValue('DisplayVersion')}
+
+Write-Host "`nChecking if XCA is installed"
+Try {
+    $xcaInstalled = $installedList | Where-Object {$_ -like "*xperience*"}
+    if (!$xcaInstalled){$xcaInstalled = "Not Installed"}
+    Write-Host "Check Complete!" -ForegroundColor Green
+}
+Catch{
+    $xcaInstalled = "XCA Version Unavailable"
+    Write-Host "There was an issue verifying this application"
+    Start-Sleep -Seconds 1
+}
+Write-Host "XCA Version - $xcaInstalled" -ForegroundColor Yellow
+Start-Sleep -Seconds 1
+
+Write-Host "`nConnectivity Test Results" -ForegroundColor Yellow
 return $testResults
