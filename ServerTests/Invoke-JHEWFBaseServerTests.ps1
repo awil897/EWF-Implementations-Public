@@ -355,6 +355,7 @@ $testResults = New-Object -TypeName PSObject -Property ([ordered]@{
     'XCA Installed' = $xcaInstalled
     'EWF URL' = $ewfFarm
     'EWF DNS Records' = $ewfFarmTest
+    'EWF SQL Connectivity' = $sqlResult
     'Support Accounts as Admin' = $members
     'Server Hostname' = $env:COMPUTERNAME
 })
