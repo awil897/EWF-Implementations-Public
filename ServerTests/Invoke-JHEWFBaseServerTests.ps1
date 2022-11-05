@@ -1,29 +1,3 @@
-Function Test-InternetConnection {
-[cmdletbinding(
-    DefaultParameterSetName = 'Site'
-)]
-param(
-    [Parameter(
-        Mandatory = $True,
-        ParameterSetName = '',
-        ValueFromPipeline = $True)]
-        [string]$Site,
-    [Parameter(
-        Mandatory = $True,
-        ParameterSetName = '',
-        ValueFromPipeline = $False)]
-        [Int]$Wait
-    )
-    #Clear the screen
-    Clear
-    #Start testing the connection and continue until the connection is good.
-    While (!(Test-Connection -computer $site -count 1 -quiet)) {
-        Write-Host -ForegroundColor Red -NoNewline "Connection down..."
-        Start-Sleep -Seconds $wait
-        }
-    #Connection is good
-    Write-Host -ForegroundColor Green "$(Get-Date): Connection up!"
-}
 Function Test-SQL{
     param (
         [string]$dbconnection
@@ -43,14 +17,165 @@ Function Test-SQL{
     }
     return $sqlResult   
 }
+function Get-FormItemProperties {
+    Param(
+        [Parameter(Mandatory = $true)] $item,
+        [Parameter(Mandatory = $false)] $dialogTitle,
+        [Parameter(Mandatory = $false)] $propertiesOrder,
+        [Parameter(Mandatory = $false)] $base64FormIcon,
+        [Parameter(Mandatory = $false)] $note
+    )
+    
+    if ($item -eq $null) {
+        exit
+    }
+    
+    if ($item.GetType().Name -eq "PSCustomObject") {
+        $hashTable = @{ }
+        $item.psobject.properties | ForEach-Object { $hashTable[$_.Name] = $_.Value }
+        $item = $hashTable
+    }
+    
+    [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
+    [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
+    
+    if ($dialogTitle -eq $null) {
+        $dialogTitle = "Fill out values:"
+    }
+    
+    $Panel = New-Object System.Windows.Forms.Panel
+    $Panel.DockPadding.Bottom = 40
+    $Panel.Dock = [System.Windows.Forms.DockStyle]::Fill
+        
+    $Font = New-Object System.Drawing.Font("Times New Roman", 12)
+    
+    $textboxY = 40
+    $textboxHeight = 20
+    $spaceBetweenTextboxes = $textboxHeight + 22
+    
+    $textboxes = @()
+    
+    if ($null -eq $propertiesOrder) {
+        $propertiesOrder = $item.Keys
+    }
+    
+    foreach ($key in $propertiesOrder) {
+    
+        $Label = New-Object System.Windows.Forms.Label
+        $Label.Location = "20,$textboxY"
+        $Label.size = "450,$textboxHeight" 
+        $Label.Text = $key
+    
+        $textboxY += $spaceBetweenTextboxes / 2
+    
+        $TextBox = New-Object System.Windows.Forms.TextBox
+        $TextBox.Location = "20,$textboxY"
+        $TextBox.size = "450,$textboxHeight"  
+            
+        $TextBox.Text = $item[$key]
+        $Panel.Controls.AddRange(@($Label, $TextBox))
+        $textboxes += $TextBox
+        $textboxY += $spaceBetweenTextboxes
+        $TextBox.Font = $Font
+    }
+    
+    $Panel.BorderStyle = 1
+    $Panel.VerticalScroll.Enabled = $true;
+    $Panel.VerticalScroll.Visible = $true;
+    $Panel.AutoScroll = $true;
+    
+    
+    $Form = New-Object System.Windows.Forms.Form
+    $Form.Height = 380
+    $Form.Width = 530
+    $Form.Text = $dialogTitle
+    $Form.Topmost = $true
+    $Form.StartPosition = "CenterScreen"
+    
+    # Base 64 encoded image
+    if ($base64FormIcon) {
+        $iconBase64 = $base64FormIcon 
+        $iconBytes = [Convert]::FromBase64String($iconBase64)
+        $stream = New-Object IO.MemoryStream($iconBytes, 0, $iconBytes.Length)
+        $stream.Write($iconBytes, 0, $iconBytes.Length);
+        $iconImage = [System.Drawing.Image]::FromStream($stream, $true)
+        $Form.Icon = [System.Drawing.Icon]::FromHandle((New-Object System.Drawing.Bitmap -Argument $stream).GetHIcon())
+    }
+
+    if ($note){
+        $NoteLabel = New-Object System.Windows.Forms.Label
+        $NoteLabel.Location = "20,$textboxY"
+        $NoteLabel.size = "450,50" 
+        $NoteLabel.MaximumSize  = "500,50" 
+        $NoteLabel.Font = 'Times New Roman,13'
+        $NoteLabel.Text = $note
+        $NoteLabel.AutoSize = $true
+        $textboxY += $spaceBetweenTextboxes/2
+        $Panel.Controls.AddRange(@($NoteLabel))
+    }
+
+    $ActionButtonHeight = 40
+    $ActionButtonY = $GroupBox.size.Height + $GroupBox.Location.Y + 10
+    $OKButton = New-Object System.Windows.Forms.Button
+    $OKButton.Size = "100,$ActionButtonHeight" 
+    $textboxY+= 30
+    $OKButton.Location = "20,$textboxY"
+    $OKButton.Text = 'OK'
+    $OKButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+ 
+
+    $CancelButton = New-Object System.Windows.Forms.Button
+    $CancelButton.Location = "370,$textboxY"
+    $CancelButton.Size = "100,$ActionButtonHeight"
+    $CancelButton.Text = "Cancel"
+    $CancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+
+    $Font = New-Object System.Drawing.Font("Times New Roman", 10)
+    $Form.Font = $Font
+        
+    $form.Controls.AddRange(@($Panel))
+    $Panel.Controls.AddRange(@($OKButton, $CancelButton))
+
+    $form.AcceptButton = $OKButton
+    $form.CancelButton = $CancelButton
+
+    $form.Add_Shown( { $form.Activate() })   
+
+    $dialogResult = $form.ShowDialog() 
+        
+
+    if ($dialogResult -eq "OK") {
+
+        $hashTable = @{ }
+        $i = 0;     
+        foreach ($key in $propertiesOrder) {
+            $hashTable[$key] = $textboxes[$i].Text
+            $i++;
+        }
+        return $hashTable
+    }
+    else {
+        throw "Execution was cancelled by the user"
+    }
+
+}
+
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $ErrorActionPreference = "Continue"
 
-Write-Host "Please enter the EWF application farm URL" -ForegroundColor Yellow 
-$ewfFarm = Read-Host
-Write-Host "Please enter the SQL Server and Instance Name (ex. EWFDB01\Workflow)"
-$ewfSQL = Read-Host
+$Inputs = ([ordered]@{
+        EWF_Farm_URL     = "EWF.CityState.Name.jha-sys.com"
+        EWF_SQL_Instance = "DBServerExample\Instance"
+})
+$Inputs = Get-FormItemProperties -item $Inputs -dialogTitle "Fill these required fields"
 
+if (($inputs.EWF_Farm_URL -like "EWF.CityState.Name.jha-sys.com") <#-or ($inputs.EWF_SQL_Instance -like "DBServerExample\Instance")#>){
+   Write-Host "Please restart this script and check that you are inputting valid information in the required fields" -ForegroundColor Red
+   return
+}
+
+$ewfFarm = $inputs.EWF_Farm_URL
+$ewfSQL = $inputs.EWF_SQL_Instance
 
 Write-host "`nChecking DNS for $ewfFarm"
 Try {
