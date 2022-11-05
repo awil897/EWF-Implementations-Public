@@ -1,3 +1,7 @@
+enum ControlType {
+    RadioButtons = 1
+    ComboBox = 2
+}
 function Get-FormItemProperties {
     Param(
         [Parameter(Mandatory = $true)] $item,
@@ -181,19 +185,6 @@ function Get-FormBinaryAnswer {
     $answer = Get-FormArrayItem -items $options -key "Name" -dialogTitle $dialogTitle
     return $answer.Value
 }
-
-<#
-.DESCRIPTION
-    Long description
-.EXAMPLE
-    PS C:\> $UserName = Get-FormStringInput "Enter your name" 
-    Shows a dialog with an input box with OK and Cancel buttons.
-.EXAMPLE
-    PS C:\> $resourceGroupName = Get-FormStringInput "Enter new resource group name" -defaultValue "Comments-Notification"
-    Shows a dialog with an input where "Comments-Notification" is pre-populated.
-.OUTPUTS
-    returns a string that user typed in an input box.
-#>
 function Get-FormStringInput {
     Param(
         [Parameter(Mandatory = $true, Position = 0)] $dialogTitle,
@@ -204,14 +195,14 @@ function Get-FormStringInput {
     [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing")     
 
     $label = New-Object System.Windows.Forms.Label
-    $label.size = "600,50"
+    $label.size = "350,50"
     $label.Location = New-Object System.Drawing.Point(10, 10)
     $label.Text = $dialogTitle
     $Font = New-Object System.Drawing.Font("Times New Roman", 12)
     $label.Font = $Font
 
     $textBox = New-Object System.Windows.Forms.TextBox
-    $textBox.size = "600,50"
+    $textBox.size = "400,50"
     $textBox.Location = New-Object System.Drawing.Point(10, 60)
     $Font = New-Object System.Drawing.Font("Times New Roman", 15)
     $textBox.Font = $Font
@@ -313,11 +304,11 @@ function Get-FormArrayItem {
     $TitleLabel.Text = $dialogTitle
     $Font = New-Object System.Drawing.Font("Times New Roman", 13)
     $TitleLabel.Font = $Font 
-    $TitleLabel.Width = 550
+    $TitleLabel.Width = 350
 
     $Panel = New-Object System.Windows.Forms.Panel
     $Panel.Location = '40,30'
-    $Panel.size = '600,1'
+    $Panel.size = '400,1'
     $Panel.text = $dialogTitle
 
     $inputControlY = 10
@@ -482,4 +473,222 @@ function Get-FormArrayItem {
         throw "Execution was cancelled by the user"
     }
 }
+function Test-Port {
+    [CmdletBinding()]
+    param (
+        [Parameter(ValueFromPipeline = $true, HelpMessage = 'Could be suffixed by :Port')]
+        [String[]]$ComputerName,
 
+        [Parameter(HelpMessage = 'Will be ignored if the port is given in the param ComputerName')]
+        [Int]$Port = 443,
+
+        [Parameter(HelpMessage = 'Timeout in millisecond. Increase the value if you want to test Internet resources.')]
+        [Int]$Timeout = 500
+    )
+
+    begin {
+        $result = [System.Collections.ArrayList]::new()
+    }
+
+    process {
+        foreach ($originalComputerName in $ComputerName) {
+            $remoteInfo = $originalComputerName.Split(":")
+            if ($remoteInfo.count -eq 1) {
+                # In case $ComputerName in the form of 'host'
+                $remoteHostname = $originalComputerName
+                $remotePort = $Port
+            } elseif ($remoteInfo.count -eq 2) {
+                # In case $ComputerName in the form of 'host:port',
+                # we often get host and port to check in this form.
+                $remoteHostname = $remoteInfo[0]
+                $remotePort = $remoteInfo[1]
+            } else {
+                $msg = "Got unknown format for the parameter ComputerName: " `
+                    + "[$originalComputerName]. " `
+                    + "The allowed formats is [hostname] or [hostname:port]."
+                Write-Error $msg
+                return
+            }
+
+            $tcpClient = New-Object System.Net.Sockets.TcpClient
+            $portOpened = $tcpClient.ConnectAsync($remoteHostname, $remotePort).Wait($Timeout)
+
+            $null = $result.Add([PSCustomObject]@{
+                RemoteHostname       = $remoteHostname
+                RemotePort           = $remotePort
+                PortOpened           = $portOpened
+                TimeoutInMillisecond = $Timeout
+                SourceHostname       = $env:COMPUTERNAME
+                OriginalComputerName = $originalComputerName
+                })
+        }
+    }
+
+    end {
+        return $result
+    }
+}
+function Test-Endpoint{
+    param (
+        [Parameter()]
+        [String]$Endpoint
+    )
+    $dnsTest = $null
+    $dnsResult = $null
+    $portTest = $null
+    $isIpAddress = [bool]($endpoint -as [ipaddress])
+
+    Write-Host "`nTesting $endpoint" -ForegroundColor Yellow
+    if ($isIpAddress -like "False"){
+        Write-host "Checking DNS for $Endpoint"
+        Try {
+            $dnsTest = (Resolve-DnsName $Endpoint -DnsOnly  -ErrorAction SilentlyContinue).Ipaddress -join ', '
+            if ($dnsTest){
+                $dnsResult = 'Successful'
+                Write-Host "Success!" -ForegroundColor Green
+            }
+            else {
+            $dnsResult = 'Error'
+            Write-Host "There was an issue verifying DNS records for $Endpoint" 
+            }
+        }
+        Catch {
+            Write-Host "There was an error verifying DNS records for $Endpoint"
+            if($_.ErrorDetails.Message) {
+                $dnsTest = $_.ErrorDetails.Message
+                $dnsResult = 'Error'
+            } else {
+                $dnsTest = $_
+                $dnsResult = 'Error'
+            }
+        }
+        Start-Sleep -Seconds 1
+    }
+    if ($isIpAddress -like "True"){
+        Write-Host "$endpoint is an IP address, skipping DNS tests"
+        $dnsTest = "Test Skipped"
+        $dnsResult = 'Test Skipped'
+        Write-host "Checking connectivity to $Endpoint on port 443"
+        Try {
+            $portTest = Test-Port -ComputerName $Endpoint -Port 443 -Timeout 300
+            if ($portTest.PortOpened -like "True"){
+                $portTest = "Successful"
+                Write-Host "Success!" -ForegroundColor Green
+            }
+            else {
+            Write-Host "There was an issue verifying connectivity to $Endpoint"
+            $portTest = "Error" 
+            }
+        }
+        Catch {
+            Write-Host "There was an issue verifying connectivity to $Endpoint"
+            if($_.ErrorDetails.Message) {
+                $portTest = $_.ErrorDetails.Message
+                $portTest = "Error"
+            } else {
+                $portTest = $_
+                $portTest = "Error"
+            }
+        }
+    }
+
+    if ($dnsResult -like 'Successful') {
+        $endpointIp = ($dnsTest | Select-Object -First 1)
+        Write-host "Checking connectivity to $endpointIp on port 443"
+        Try {
+            $portTest = Test-Port -ComputerName $endpointIp -Port 443 -Timeout 300
+            if ($portTest.PortOpened -like "True"){
+                $portTest = "Successful"
+                Write-Host "Success!" -ForegroundColor Green
+            }
+            else {
+            Write-Host "There was an issue verifying connectivity to $Endpoint"
+            $portTest = "Error" 
+            }
+        }
+        Catch {
+            Write-Host "There was an issue verifying connectivity to $Endpoint"
+            if($_.ErrorDetails.Message) {
+                $portTest = $_.ErrorDetails.Message
+                $portTest = "Error"
+            } else {
+                $portTest = $_
+                $portTest = "Error"
+            }
+        }
+    }
+    
+    $endpointResults = ([ordered]@{
+        'Endpoint Address' = $Endpoint
+        'DNS Records' = $dnsTest
+        'DNS Result' = $dnsResult
+        'Port 443 Connection Test' = $portTest
+    })
+    Start-Sleep -Seconds 1
+    return $endpointResults
+}
+
+$testSet = @('EWF On-Premises', 'JX/XP On-Premises', 'JXAPP', 'XWF', 'XPH2019.0', 'XPH2021.1')
+#$location = Get-FormArrayItem -items $locations -key "displayName" -dialogTitle "Choose location" -defaultValue "Canada Central"
+$testItem = Get-FormArrayItem -items $testSet -dialogTitle "Choose the endpoint you would like to test" -defaultValue "EWF On-Premises" 
+
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$ErrorActionPreference = "Continue"
+
+switch ($testItem) {
+    "EWF On-Premises" {
+        $endpoint = Get-FormStringInput -dialogTitle "Enter the EWF Farm URL" -defaultValue "EWF.CityState.Name.jha-sys.com"
+        $testResults = Test-Endpoint -Endpoint $endpoint
+        break
+    }
+    "JX/XP On-Premises"   {
+        $endpoint = Get-FormStringInput -dialogTitle "Enter the JX Farm URL" -defaultValue "jXchange.CityState.Name.jha-sys.com"
+        $testResults = Test-Endpoint -Endpoint $endpoint
+        break
+    }
+    "JXAPP" {
+        Write-Host "Testing connection to JXAPP by URL and IP Address" -ForegroundColor Yellow
+        $endpoints = @("jxapp.jhahosted.com","10.23.24.145")
+        $testResults = @()
+        foreach ($endpoint in $endpoints){
+            $obj = Test-Endpoint -Endpoint $endpoint
+            $testResults += $obj
+            $obj = $null
+        }
+        break
+    }
+    "XWF"  {
+        Write-Host "Testing connection to XWF by URL and IP Address" -ForegroundColor Yellow
+        $endpoints = @("ewfhstxp.jhahosted.com","10.49.128.22")
+        $testResults = @()
+        foreach ($endpoint in $endpoints){
+            $obj = Test-Endpoint -Endpoint $endpoint
+            $testResults += $obj
+            $obj = $null
+        }
+        break
+    }
+    "XPH2019.0" {
+        Write-Host "Testing connection to XPH 2019.0 by both URL and IP Address" -ForegroundColor Yellow
+        $endpoints = @("hstxphprod.jhahosted.com","10.23.24.193","10.23.24.194") 
+        $testResults = @()
+        foreach ($endpoint in $endpoints){
+            $obj = Test-Endpoint -Endpoint $endpoint
+            $testResults += $obj
+            $obj = $null
+        }
+        break
+    }
+    "XPH2021.1" {
+        Write-Host "Testing connection to XPH 2021.1 by both URL and IP Address" -ForegroundColor Yellow
+        $endpoints = @("xph.jhahosted.com","10.23.24.195","jx.xph.jhahosted.com", "10.23.24.196", "adfs.xph.jhahosted.com","10.23.24.197")
+        $testResults = @()
+        foreach ($endpoint in $endpoints){
+            $obj = Test-Endpoint -Endpoint $endpoint
+            $testResults += $obj
+            $obj = $null
+        }
+        break
+    }
+}
+return $testResults
