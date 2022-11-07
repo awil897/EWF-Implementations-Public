@@ -402,12 +402,12 @@ Catch {
 }
 Start-Sleep -Seconds 1
 
-Write-Host "`nChecking if Webex Remote Access is installed" ForegroundColor Green
+Write-Host "`nChecking if Webex Remote Access is installed"
 Try {
     $HNA = (Get-ItemProperty -Path HKLM:\SOFTWARE\WOW6432Node\WebEx\Config\RA\General -Name "HNA" -ErrorAction SilentlyContinue).HNA 
     If ($HNA -like $null){
         $HNA = "Not Installed"
-        Write-Host "Successfully Checked" -Foreground
+        Write-Host "Successfully Checked" -ForegroundColor Green
     }
 }
 Catch {
