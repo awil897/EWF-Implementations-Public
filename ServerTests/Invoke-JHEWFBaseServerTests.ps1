@@ -353,10 +353,11 @@ Start-Sleep -Seconds 1
 
 Write-Host "Checking if Support Account is a member of the local administrators group"
 Try {
-    $members = ((Get-LocalGroupMember -Group Administrators) |  Where-Object {($_.name -like "*jxsupport*" -or  $_.name -like "*eissupport*") }).name -join ', '
+    $adminlist = (net localgroup Administrators) | Where-Object { $_ -match '\S' } | Select-Object -Skip 4 | Select-Object -SkipLast 1
+    $members = ($adminlist | Where-Object { $_ -like "*support*"}) -join ", "
     if (!$members){
         $members = "Not Present"
-        Write-Host "Accounts Not Found"
+        Write-Host "Support accounts may not be present"
         }
     if ($members){
         Write-Host "Success!" -ForegroundColor Green
