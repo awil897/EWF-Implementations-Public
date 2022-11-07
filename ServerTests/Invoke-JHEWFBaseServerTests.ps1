@@ -1,3 +1,27 @@
+Function Get-EWFUsers {
+    $search = [adsisearcher]“(&(ObjectCategory=person)(ObjectClass=user)(samaccountname=*ewf*))”
+    $users = $search.FindAll()
+    $userArray = @()
+    foreach($user in $users) {
+        $SamAccountName = $user.Properties['SamAccountName']
+        $userArray += $SamAccountName
+        $SamAccountName = $null
+    }
+    $userString = $userArray -join ", "
+    return $userString
+}
+Function Get-EWFGroups {
+    $search = [adsisearcher]“(&(objectCategory=group)(samaccountname=*ewf*))”
+    $groups = $search.FindAll()
+    $groupsArray = @()
+    foreach($group in $groups) {
+        $SamAccountName = $group.Properties['SamAccountName']
+        $groupsArray += $SamAccountName
+        $SamAccountName = $null
+    }
+    $groupsString = $groupsArray -join ", "
+    return $groupsString
+}
 Function Test-SQL{
     param (
         [string]$dbconnection
@@ -341,8 +365,50 @@ Try {
 }
 Catch{
     $members = "Error"
-        Write-Host "Error verifying group membership"
-        Start-Sleep -Seconds 1
+    Write-Host "Error verifying group membership"
+    Start-Sleep -Seconds 1
+}
+Start-Sleep -Seconds 1
+
+Write-Host "Getting a list of possible EWF Users" -ForegroundColor Green
+Try {
+    $usersFound = Get-EWFUsers
+    if ($usersFound -like $null){
+        "No Users Found"
+        $usersFound = "No Users Found"
+    }
+}
+Catch {
+    $usersFound = "Error"
+    Write-Host "Error while looking up EWF Users"
+}
+Start-Sleep -Seconds 1
+Write-Host "`nGetting a list of possible EWF AD Groups"
+Try {
+    $groupsFound = Get-EWFGroups
+    Write-Host "Success!" -ForegroundColor Green
+    if ($groupsFound -like $null){
+        Write-Host "No Groups Found"
+        $groupsFound = "No Groups Found"
+    }
+}
+Catch {
+    $groupsFound = "Error"
+    Write-Host "Error while looking up EWF Groups"
+}
+Start-Sleep -Seconds 1
+Write-Host "`nGetting a list of possible EWF AD Users"
+Try {
+    $usersFound = Get-EWFUsers
+    Write-Host "Success!" -ForegroundColor Green
+    if ($usersFound -like $null){
+        Write-Host "No Users Found"
+        $usersFound = "No Users Found"
+    }
+}
+Catch {
+    $usersFound = "Error"
+    Write-Host "Error while looking up EWF Users"
 }
 Start-Sleep -Seconds 1
 
@@ -359,6 +425,8 @@ $testResults = New-Object -TypeName PSObject -Property ([ordered]@{
     'SQL Instance' = $ewfSQL
     'Support Accounts as Admin' = $members
     'Server Hostname' = $env:COMPUTERNAME
+    'EWF Users Found' = $usersFound
+    'EWF Groups Found' = $groupsFound
 })
 
 Write-Host "`nPlease screenshot or copy the results below and email to jhaEnterpriseWorkflowImplementation@jackhenry.com" -BackgroundColor Yellow -ForegroundColor Black
