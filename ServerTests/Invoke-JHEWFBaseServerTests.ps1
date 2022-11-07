@@ -370,19 +370,7 @@ Catch{
 }
 Start-Sleep -Seconds 1
 
-Write-Host "Getting a list of possible EWF Users" -ForegroundColor Green
-Try {
-    $usersFound = Get-EWFUsers
-    if ($usersFound -like $null){
-        "No Users Found"
-        $usersFound = "No Users Found"
-    }
-}
-Catch {
-    $usersFound = "Error"
-    Write-Host "Error while looking up EWF Users"
-}
-Start-Sleep -Seconds 1
+
 Write-Host "`nGetting a list of possible EWF AD Groups"
 Try {
     $groupsFound = Get-EWFGroups
@@ -397,6 +385,7 @@ Catch {
     Write-Host "Error while looking up EWF Groups"
 }
 Start-Sleep -Seconds 1
+
 Write-Host "`nGetting a list of possible EWF AD Users"
 Try {
     $usersFound = Get-EWFUsers
