@@ -340,7 +340,7 @@ $installedList = foreach($obj in $InstalledSoftware){$obj.GetValue('DisplayName'
 
 Write-Host "`nChecking if XCA is installed"
 Try {
-    $xcaInstalled = $installedList | Where-Object {$_ -like "*xperience*"}
+    $xcaInstalled = $installedList | Where-Object {$_ -like "*xperience client agent*"}
     if (!$xcaInstalled){$xcaInstalled = "Not Installed"}
     Write-Host "Confirmed!" -ForegroundColor Green
 }
