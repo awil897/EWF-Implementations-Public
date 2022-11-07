@@ -1,5 +1,5 @@
 Function Get-EWFUsers {
-    $search = [adsisearcher]“(&(ObjectCategory=person)(ObjectClass=user)(samaccountname=*ewf*))”
+    $search = [adsisearcher]"(&(ObjectCategory=person)(ObjectClass=user)(samaccountname=*ewf*))"
     $users = $search.FindAll()
     $userArray = @()
     foreach($user in $users) {
@@ -11,7 +11,7 @@ Function Get-EWFUsers {
     return $userString
 }
 Function Get-EWFGroups {
-    $search = [adsisearcher]“(&(objectCategory=group)(samaccountname=*ewf*))”
+    $search = [adsisearcher]"(&(objectCategory=group)(samaccountname=*ewf*))"
     $groups = $search.FindAll()
     $groupsArray = @()
     foreach($group in $groups) {
