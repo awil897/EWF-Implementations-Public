@@ -398,7 +398,21 @@ Try {
 }
 Catch {
     $usersFound = "Error"
-    Write-Host "Error while looking up EWF Users"
+    Write-Host "Error while looking up EWF Users" 
+}
+Start-Sleep -Seconds 1
+
+Write-Host "`nChecking if Webex Remote Access is installed" ForegroundColor Green
+Try {
+    $HNA = (Get-ItemProperty -Path HKLM:\SOFTWARE\WOW6432Node\WebEx\Config\RA\General -Name "HNA" -ErrorAction SilentlyContinue).HNA 
+    If ($HNA -like $null){
+        $HNA = "Not Installed"
+        Write-Host "Successfully Checked" -Foreground
+    }
+}
+Catch {
+    $HNA = "Error querying the Registry"
+    Start-Sleep -Seconds 1
 }
 Start-Sleep -Seconds 1
 
@@ -417,6 +431,7 @@ $testResults = New-Object -TypeName PSObject -Property ([ordered]@{
     'Server Hostname' = $env:COMPUTERNAME
     'EWF Users Found' = $usersFound
     'EWF Groups Found' = $groupsFound
+    'SmartTech Entry Name' = $HNA
 })
 
 Write-Host "`nPlease screenshot or copy the results below and email to jhaEnterpriseWorkflowImplementation@jackhenry.com" -BackgroundColor Yellow -ForegroundColor Black
