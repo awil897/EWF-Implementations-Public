@@ -243,6 +243,7 @@ Write-Progress -Activity "Module Installation"  -Status "Unpack Module" -Percent
 $path = (Resolve-Path -Path "${archiveName}\$repoBranch\$moduleToLoad").Path
 Write-Progress -Activity "Module Installation"  -PercentComplete 40;    
 Write-Progress -Activity "Module Installation"  -Status "Copy Module to PowershellModules folder" -PercentComplete 50;
+$destFolder = "$Env:Programfiles\WindowsPowershell\Modules\$module"
 Move-Item -Path $path -Destination "$DestFolder" -Force;
 Write-Progress -Activity "Module Installation"  -Status "Copy Module to PowershellModules folder" -PercentComplete 60;
 #Move-ModuleFiles -ArchiveFolder $archiveName -RepoBranch $repoBranch -Module $moduleToLoad -DestFolder $moduleFolder;
