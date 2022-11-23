@@ -238,7 +238,7 @@ $file =  "${tempFile}.zip";
 Receive-Module -Url $downloadUrl -File $file;
 $archiveName = $tempfile;
 $repoBranch =  $repo + "-" + $branch
-Expand-Archive -Path "$($archiveName).zip" -DestinationPath $Archive -Force;
+Expand-Archive -Path "$($archiveName).zip" -DestinationPath $archiveName -Force;
 Write-Progress -Activity "Module Installation"  -Status "Unpack Module" -PercentComplete 40;
 $path = (Resolve-Path -Path "${archiveName}\$repoBranch\$moduleToLoad").Path
 Write-Progress -Activity "Module Installation"  -PercentComplete 40;    
