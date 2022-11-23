@@ -1,9 +1,5 @@
 # capture variable values
 [string]$Url = Get-Variable -ValueOnly -ErrorAction SilentlyContinue Url;
-
-#[string]$FileUrl = Get-Variable -ValueOnly -ErrorAction SilentlyContinue Url;
-
-
 [string]$User = Get-Variable -ValueOnly -ErrorAction SilentlyContinue User;
 [string]$Repo = Get-Variable -ValueOnly -ErrorAction SilentlyContinue Repo;
 [string]$Branch = Get-Variable -ValueOnly -ErrorAction SilentlyContinue Branch;
@@ -23,7 +19,6 @@ function Read-ParamMode {
     $message = 'Select Module repo enter mode'
     return $host.ui.PromptForChoice($null, $message, $options, 1)
 }
-
 function Read-RepoInfo {
     param (
         [string]$User,
@@ -68,38 +63,13 @@ function Read-RepoInfo {
         ModulePath = $res[$p_path.Name]
     }
 }
-
 function Get-LocalTempPath {
     param (
         [string] $RepoName
     )
     $tmpDir = [System.IO.Path]::GetTempPath();
-    return "$tmpDir\$RepoName";
+    return "$tmpDir$RepoName";
 }
-
-function Get-ModuleInstallFolder {
-    param (
-        [string] $ModuleName
-    )
-
-    $separator = [IO.Path]::PathSeparator;
-
-    $ProfileModulePath = $env:PSModulePath.Split($separator)[0];
-    if (!(Test-Path $ProfileModulePath)) {
-        New-Item -ItemType Directory -Path $ProfileModulePath;
-    }
-
-    $pathToInstal = Join-Path $ProfileModulePath $ModuleName;
-
-    if (Test-Path $pathToInstal) {
-        throw "Unable to install module ''$ModuleName''. 
-        Directory with the same name alredy exist in the Profile directory ''$ProfileModulePath''.
-        Please rename the exisitng module folder and try again. 
-        ";
-    }
-    return $pathToInstal;
-}
-
 function Receive-Module {
     param (
         [string] $File,
@@ -146,7 +116,6 @@ function Receive-Module {
     Write-Debug "Unblock downloaded file access $File";
     Unblock-File -Path $File;
 }
-
 function Expand-ModuleZip {
     param (
         [string] $Archive
@@ -156,32 +125,23 @@ function Expand-ModuleZip {
     try {
 
         Write-Progress -Activity "Module Installation"  -Status "Unpack Module" -PercentComplete 0;
-        
-        Add-Type -AssemblyName System.IO.Compression.FileSystem;
-        Write-Debug "Unzip file to floder $Archive";
-        [System.IO.Compression.ZipFile]::ExtractToDirectory("${Archive}.zip", "${Archive}");
+        Write-Debug "Unzip file to folder $Archive";
+        Expand-Archive -Path "$($Archive).zip" -DestinationPath $Archive -Force;
     }
-    catch {  }
+    catch { Write-Host "Error Unzipping Archive" }
 
     Write-Progress -Activity "Module Installation"  -Status "Unpack Module" -PercentComplete 40;
 }
-
 function Move-ModuleFiles {
     param (
         [string] $ArchiveFolder,
         [string] $Module,
         [string] $DestFolder,
+        [string] $repoBranch,
         [string] $ModuleHash
     )
-    $path = (Resolve-Path -Path "${ArchiveFolder}\*-master\$Module").Path
-    Write-Progress -Activity "Module Installation"  -Status "Store computed moduel hash" -PercentComplete 40;
-    Out-File -InputObject $ModuleHash -FilePath "$path\hash" 
     
-    Write-Progress -Activity "Module Installation"  -Status "Copy Module to PowershellModules folder" -PercentComplete 50;
-    Move-Item -Path $path -Destination "$DestFolder";
-    Write-Progress -Activity "Module Installation"  -Status "Copy Module to PowershellModules folder" -PercentComplete 60;
 }
-
 function Invoke-Cleanup{
     param (
         [string] $ArchiveFolder
@@ -190,20 +150,15 @@ function Invoke-Cleanup{
     Remove-Item "${ArchiveFolder}*" -Recurse -ErrorAction SilentlyContinue;
     Write-Progress -Activity "Module Installation"  -Status "Module installed sucessaful";
 }
-
-
 function Write-Finish {
     param (
         [string] $moduleName
     )
     Write-Host "Module installation complete";
 
-    Write-Host "Tupe ''Import-Module $moduleName'' to start using module";
+    Write-Host "Tipe ''Import-Module $moduleName'' to start using module";
 
 }
-
-
-
 function GetGroupValue($match, [string]$group, [string]$default = "") {
     $val = $match.Groups[$group].Value
     Write-Debug $val
@@ -212,7 +167,6 @@ function GetGroupValue($match, [string]$group, [string]$default = "") {
     }
     return $default
 }
-
 function Convert-GitHubUrl(){
     param (
         [string]$Url
@@ -233,7 +187,6 @@ function Convert-GitHubUrl(){
         ModulePath = GetGroupValue $githubMatch "Folder"
     }
 }
-
 
 # in case when both Url and Repo variables are empty - request params in the interactive mode
 if ( "x$Url" -eq "x" -and "x$Repo" -eq "x" -and "x$FileUrl" -eq "x" ) {
@@ -256,7 +209,6 @@ if ( "x$Url" -eq "x" -and "x$Repo" -eq "x" -and "x$FileUrl" -eq "x" ) {
         }
     }
 }
-
 # try convert url to fully cvalified path
 if( -not [string]::IsNullOrWhitespace($Url) ){
     $res = Convert-GitHubUrl -Url $Url
@@ -265,17 +217,6 @@ if( -not [string]::IsNullOrWhitespace($Url) ){
     $Branch = $res['Branch'];
     $ModulePath = $res['ModulePath'];
 }
-
-
-# try convert url to fully cvalified path
-if( -not [string]::IsNullOrWhitespace($Url) ){
-    $res = Convert-GitHubUrl -Url $Url
-    $User = $res['User'];
-    $Repo = $res['Repo'];
-    $Branch = $res['Branch'];
-    $ModulePath = $res['ModulePath'];
-}
-
 if( -not ([string]::IsNullOrWhitespace($ModulePath)) ){
     $moduleToLoad = $ModulePath;
     $moduleName = Split-Path $moduleToLoad -leaf;
@@ -285,29 +226,25 @@ else{
     $moduleName = $Repo;
     $moduleToLoad = "";
 }
-
 if( ([string]::IsNullOrWhitespace($Branch)) ){
-    $Branch = "master";
+    $Branch = "main";
 }
 
 $host.ui.WriteLine([ConsoleColor]::Green, [ConsoleColor]::Black, "Start downloading Module ${moduleName} from GitHub Repository:${Repo} User:${User} Branch:${Branch}")
-
 $tempFile = Get-LocalTempPath -RepoName $Repo;
-$moduleFolder = Get-ModuleInstallFolder -ModuleName $moduleName;
-
+$moduleFolder = "$Env:Programfiles\WindowsPowerShell\Modules\$moduleName"
 $downloadUrl = [uri]"https://github.com/${User}/${Repo}/archive/${Branch}.zip";
-
 $file =  "${tempFile}.zip";
-
 Receive-Module -Url $downloadUrl -File $file;
-
-$moduleHash = Get-FileHash -Algorithm SHA384 -Path $file
-
-$archiveName = $tempFile;
-
-Expand-ModuleZip -Archive $archiveName;
-
-Move-ModuleFiles -ArchiveFolder $archiveName -Module $moduleToLoad -DestFolder $moduleFolder -ModuleHash "$($moduleHash.Hash)";
+$archiveName = $tempfile;
+$repoBranch =  $repo + "-" + $branch
+Expand-Archive -Path "$($archiveName).zip" -DestinationPath $Archive -Force;
+Write-Progress -Activity "Module Installation"  -Status "Unpack Module" -PercentComplete 40;
+$path = (Resolve-Path -Path "${archiveName}\$repoBranch\$moduleToLoad").Path
+Write-Progress -Activity "Module Installation"  -PercentComplete 40;    
+Write-Progress -Activity "Module Installation"  -Status "Copy Module to PowershellModules folder" -PercentComplete 50;
+Move-Item -Path $path -Destination "$DestFolder" -Force;
+Write-Progress -Activity "Module Installation"  -Status "Copy Module to PowershellModules folder" -PercentComplete 60;
+#Move-ModuleFiles -ArchiveFolder $archiveName -RepoBranch $repoBranch -Module $moduleToLoad -DestFolder $moduleFolder;
 Invoke-Cleanup -ArchiveFolder $archiveName
-
 Write-Finish -moduleName $moduleName
