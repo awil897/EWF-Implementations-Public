@@ -156,7 +156,7 @@ function Write-Finish {
     )
     Write-Host "Module installation complete";
 
-    Write-Host "Tipe ''Import-Module $moduleName'' to start using module";
+    Write-Host "Type 'Import-Module $moduleName' to start using module";
 
 }
 function GetGroupValue($match, [string]$group, [string]$default = "") {
