@@ -80,15 +80,27 @@ $ewfFarm = Read-Host "Enter EWF Farm URL"
 $filename = $ewfFarm.Substring($ewfFarm.LastIndexOf("/") + 1)
 $prefix = $filename.Split('.')[0]
 
-if ($prefix -like "ewf"){
+if ($prefix -clike "ewf"){
     $rpName = $ewfFarm.Replace('ewf','rp-ewf')
     $rpName = $rpName.Replace('.com','.com.pfx')
     $ewfFarm = $ewfFarm.Replace('.com','.com.pfx')
 }
 
-elseif ($prefix -like "ewf-uat"){
+if ($prefix -clike "EWF"){
+    $rpName = $ewfFarm.Replace('EWF','RP-EWF')
+    $rpName = $rpName.Replace('.com','.com.pfx')
+    $ewfFarm = $ewfFarm.Replace('.com','.com.pfx')
+}
+
+if ($prefix -clike "ewf-uat"){
     $rpName = $ewfFarm.Replace('ewf-uat','rp-ewf')
-      $rpName = $rpName.Replace('.com','.com.pfx')
+    $rpName = $rpName.Replace('.com','.com.pfx')
+    $ewfFarm = $ewfFarm.Replace('.com','.com.pfx')
+}
+
+if ($prefix -clike "EWF-UAT"){
+    $rpName = $ewfFarm.Replace('EWF-UAT','RP-EWF')
+    $rpName = $rpName.Replace('.com','.com.pfx')
     $ewfFarm = $ewfFarm.Replace('.com','.com.pfx')
 }
 
