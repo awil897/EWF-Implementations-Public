@@ -85,9 +85,19 @@ if ($prefix -like "EWF"){
     $rpName = $rpName.Replace('.com','.com.pfx')
     $ewfFarm = $ewfFarm.Replace('.com','.com.pfx')
 }
+elseif ($prefix -like "ewf"){
+    $rpName = $ewfFarm.Replace('ewf','rp-ewf')
+    $rpName = $rpName.Replace('.com','.com.pfx')
+    $ewfFarm = $ewfFarm.Replace('.com','.com.pfx')
+}
 
-if ($prefix -like "EWF-UAT"){
+elseif ($prefix -like "EWF-UAT"){
     $rpName = $ewfFarm.Replace('EWF-UAT','RP-EWF')
+      $rpName = $rpName.Replace('.com','.com.pfx')
+    $ewfFarm = $ewfFarm.Replace('.com','.com.pfx')
+}
+elseif ($prefix -like "ewf-uat"){
+    $rpName = $ewfFarm.Replace('ewf-uat','rp-ewf')
       $rpName = $rpName.Replace('.com','.com.pfx')
     $ewfFarm = $ewfFarm.Replace('.com','.com.pfx')
 }
