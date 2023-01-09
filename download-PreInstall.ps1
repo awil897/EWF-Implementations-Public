@@ -21,7 +21,7 @@ function download-file-from-github-repo($repoPath, $repoFilename, $repoName, $re
         $response = invoke-restMethod $url -headers @{Authorization = "bearer $token"}
     }
     catch {
-            write-host '$repoFileName cannot be found in repository' -ForegroundColor Red
+            write-host "$($repoFileName) cannot be found in repository" -ForegroundColor Red
 
             return
     }
