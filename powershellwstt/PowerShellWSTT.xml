@@ -1,0 +1,289 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PowerShellWSTT</name>
+    </assembly>
+    <members>
+        <member name="M:PowerShellWSTT.Common.MyStopwatch.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:PowerShellWSTT.Common.MyStopwatch"/> class. And gives the option to start the timer.
+            </summary>
+            <param name="start">if set to <c>true</c> [start].</param>
+        </member>
+        <member name="M:PowerShellWSTT.Common.MyStopwatch.Start">
+            <summary>
+            Starts the Timer instance. Must end it to get the value back.
+            </summary>
+        </member>
+        <member name="M:PowerShellWSTT.Common.MyStopwatch.Stop">
+            <summary>
+            Ends the timespan. Use gets after this.
+            </summary>
+        </member>
+        <member name="M:PowerShellWSTT.Common.MyStopwatch.Get_00m00s000s">
+            <summary>
+            Ends the Timer Instance. Example: 00m00s000ms
+            </summary>
+            <returns>00m00s000ms</returns>
+        </member>
+        <member name="M:PowerShellWSTT.Common.MyStopwatch.Get_00Minutes_00Seconds_000Milliseconds">
+            <summary>
+            Ends the Timer Instance. Example: 00 Minutes 00 Seconds 000 Milliseconds
+            </summary>
+            <returns>00 Minutes 00 Seconds 000 Milliseconds</returns>
+        </member>
+        <member name="M:PowerShellWSTT.Common.MyStopwatch.GetTicks">
+            <summary>
+            Ends the Timer Instance. Gets the ticks of the time span.
+            </summary>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:PowerShellWSTT.Common.MyStopwatch.GetAverageDateTime(System.Collections.Generic.List{System.Int64})" -->
+        <member name="M:PowerShellWSTT.Common.WebProxyHelper.BypassCertificateError">
+            <summary>
+            solution for exception
+            System.Net.WebException: 
+            The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel. ---> System.Security.Authentication.AuthenticationException: The remote certificate is invalid according to the validation procedure.
+            </summary>
+        </member>
+        <member name="M:PowerShellWSTT.Common.WebProxyHelper.CreateRequestBody(System.String,System.String,System.String)">
+            <summary>
+            Creates the request body.
+            </summary>
+            <param name="requestOperation">The request operation.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:PowerShellWSTT.Common.WebProxyHelper.CreateSoapHeader(System.String,System.String,System.String)">
+            <summary>
+            Creates the SOAP header.
+            </summary>
+            <param name="soapAction">The SOAP action.</param>
+            <param name="endpoint">The endpoint.</param>
+            <param name="ServerName">Name of the server.</param>
+            <returns></returns>
+        </member>
+        <member name="M:PowerShellWSTT.Common.WebProxyHelper.GetHeaderCodeClass(System.String)">
+            <summary>
+            Gets the header code class.
+            </summary>
+            <param name="headerStatusCode">The header status code.</param>
+            <returns></returns>
+        </member>
+        <member name="M:PowerShellWSTT.Common.WebProxyHelper.GetSoapActionName(System.String)">
+            <summary>
+            Gets the SOAP action name.
+            </summary>
+            <param name="Input">The XML input string.</param>
+            <returns>The Action Name.</returns>
+        </member>
+        <member name="M:PowerShellWSTT.Common.WebProxyHelper.ClearWhiteSpace(System.String)">
+            <summary>
+            Clears the white space.
+            </summary>
+            <param name="text">The text.</param>
+            <returns></returns>
+        </member>
+        <member name="M:PowerShellWSTT.Common.WebProxyHelper.ClearWhiteSpace(System.String,System.Boolean)">
+            <summary>
+            Clears the white space.
+            </summary>
+            <param name="text">The text.</param>
+            <param name="removeHeader">if set to <c>true</c> [remove header].</param>
+            <returns></returns>
+        </member>
+        <member name="M:PowerShellWSTT.Common.WebProxyHelper.RemoveSpaces(System.String)">
+            <summary>
+            Removes the spaces.
+            </summary>
+            <param name="xmlonly">The xmlonly.</param>
+            <returns></returns>
+        </member>
+        <member name="M:PowerShellWSTT.Common.WebProxyHelper.FormatMessage(System.Boolean,System.String)">
+            <summary>
+            Formats the message.
+            </summary>
+            <param name="formatXML">if set to <c>true</c> [format XML].</param>
+            <param name="Input">The input.</param>
+            <returns></returns>
+        </member>
+        <member name="M:PowerShellWSTT.Common.WebProxyHelper.FormatXML(System.String)">
+            <summary>
+            Formats the XML.
+            </summary>
+            <param name="xmlonly">The xmlonly.</param>
+            <returns></returns>
+        </member>
+        <member name="T:PowerShellWSTT.Common.WebProxyRequest">
+            <summary>
+            Web Proxy Request
+            </summary>
+        </member>
+        <member name="T:PowerShellWSTT.Common.WebProxyResponse">
+            <summary>
+            Web Proxy Response
+            </summary>
+        </member>
+        <member name="P:PowerShellWSTT.Common.WebProxyResponse.Response">
+            <summary>
+            Gets or sets the response.
+            </summary>
+            <value>
+            The response.
+            </value>
+        </member>
+        <member name="M:PowerShellWSTT.Common.WebProxyResponse.ParseHTTPHeader">
+            <summary>Parses the HTTP header.</summary>
+        </member>
+        <member name="M:PowerShellWSTT.WebProxy.Connect(PowerShellWSTT.Common.WebProxyRequest)">
+            <summary>
+            Connects the specified my web proxy request.
+            </summary>
+            <param name="myWebProxyRequest">My web proxy request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:PowerShellWSTT.WebProxy.webConnectSSL(PowerShellWSTT.Common.WebProxyRequest)">
+            <summary>
+            Webs the connect SSL.
+            </summary>
+            <param name="myWebProxyRequest">My web proxy request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:PowerShellWSTT.WebProxy.EstablishSSL(System.String,System.Net.Sockets.TcpClient,System.String)">
+            <summary>
+            Establishes the SSL.
+            </summary>
+            <param name="machineName">Name of the machine.</param>
+            <param name="client">The client.</param>
+            <param name="certName">Name of the cert.</param>
+            <returns></returns>
+            <exception cref="T:System.Security.Authentication.AuthenticationException"></exception>
+        </member>
+        <member name="M:PowerShellWSTT.WebProxy.ValidateServerCertificate(System.Object,System.Security.Cryptography.X509Certificates.X509Certificate,System.Security.Cryptography.X509Certificates.X509Chain,System.Net.Security.SslPolicyErrors)">
+            <summary>
+            Validates the server certificate.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="certificate">The certificate.</param>
+            <param name="chain">The chain.</param>
+            <param name="sslPolicyErrors">The SSL policy errors.</param>
+            <returns></returns>
+        </member>
+        <member name="T:PowerShellWSTT.GetXmlOperation">
+            <summary>
+            <para type="name">Get-XmlOperation</para>
+            <para type="synopsis">Creates a new XmlDocument with cleaning options.</para>
+            <para type="description">The Get-XmlOperation cmdlet creates a new XmlDocument from a file path or xml string.</para>
+            <para type="description">To use Get-XmlOperation, pipe an object or pass parameters to Get-XmlOperation then send this information to Send-XmlOperation.</para>
+            </summary>
+            <para type="link">Send-XmlOperation</para>
+            <para type="link">New-ServiceConnection</para>
+            <para type="link">Get-Content</para>
+            <para type="link">Get-Credential</para>
+            <para type="link">ConvertTo-Splat</para>
+            <example>
+              <code>PS C:\>$testRequest = Get-XmlOperation -Path .\Demo\PingSampleXML.txt</code>
+              <para>This gets a file or xml string operation and creates a new Xml Request Document from that operation.</para>n
+            </example>
+            <example>
+              <code>PS C:\>$testRequest = Get-XmlOperation -Path .\Demo\PingSampleXML.txt -CleanXml</code>
+              <para>This gets a file or xml string operation, then cleans it and then creates a new Xml Request Document from that operation.</para>n
+            </example>
+        </member>
+        <member name="P:PowerShellWSTT.GetXmlOperation.Path">
+            <summary>
+            <para type="description">Pass in the xml file 'Path' or the 'XmlString'.</para>
+            </summary>
+        </member>
+        <member name="P:PowerShellWSTT.GetXmlOperation.XmlString">
+            <summary>
+            <para type="description">Pass in the xml file 'Path' or the 'XmlString'.</para>
+            </summary>
+        </member>
+        <member name="P:PowerShellWSTT.GetXmlOperation.CleanXml">
+            <summary>
+            <para type="description">Toggle to clean the xml before it creates an XmlDocument, Cleaning currently removes ' JHANull="" Rstr="" SrchType=""  MaskVal="" OvrrdInstRtId="" JHANA="" NotOccurType="" xsi:nil="true"' </para>
+            </summary>
+        </member>
+        <member name="P:PowerShellWSTT.GetXmlOperation.ClearWhiteSpace">
+            <summary>
+            <para type="description">Toggle to clear Whitespace before creaing an xmldocument </para>
+            </summary>
+        </member>
+        <member name="T:PowerShellWSTT.NewServiceConnection">
+             <summary>
+             <para type="name">New-ServiceConnection</para>
+             <para type="synopsis">Creates a new Service Connection to access a local or remote web server.</para>
+             <para type="description">The New-ServiceConnection cmdlet creates connection settings to local server or on a remote server.</para>
+             <para type="description">To use New-ServiceConnection, pipe an object or pass parameters to New-ServiceConnection.</para>
+             <para type="description">Then pass the New-ServiceConnection as a parm into other PowerShellWSTT cmdlets.</para>
+             </summary>
+             <para type="link">Get-XmlOperation</para>
+             <para type="link">Send-XmlOperation</para>
+             <para type="link">Get-Credential</para>
+             <para type="link">ConvertTo-Splat</para>
+             <example>
+               <code>
+            PS C:\>$password = ConvertTo-SecureString -String "my super password" -AsPlainText -Force
+            PS C:\>$connection = New-ServiceConnection -UserName "me@domain.com" -Password $password -ServerName "myServer.jha-sys.com"</code>
+               <para>This sends an xml request to the server in the service connection and gets back an xml saop response object.</para>n
+             </example>
+        </member>
+        <member name="P:PowerShellWSTT.NewServiceConnection.ServerName">
+            <summary>
+            <para type="description">Can be used to specify the ServerName.</para>
+            </summary>
+        </member>
+        <member name="P:PowerShellWSTT.NewServiceConnection.EndPointSvc">
+            <summary>
+            <para type="description">Can be used to set the EndPointSvc URL, defaults to servicegateway.svc</para>
+            </summary>
+        </member>
+        <member name="P:PowerShellWSTT.NewServiceConnection.EndpointKind">
+            <summary>
+            <para type="description">Specify the EndPointSvc URL kind, defaults to ServiceGateway</para>
+            </summary>
+        </member>
+        <member name="F:PowerShellWSTT.NewServiceConnection._SSLPort">
+            <summary>
+            <para type="description">SSL Port defaults to 443</para>
+            </summary>
+        </member>
+        <member name="P:PowerShellWSTT.NewServiceConnection.UserName">
+            <summary>
+            <para type="description">Username for the connection in 'user@domain.com' format.</para>
+            </summary>
+        </member>
+        <member name="P:PowerShellWSTT.NewServiceConnection.Password">
+            <summary>
+            <para type="description">Password for the connection.</para>
+            </summary>
+        </member>
+        <member name="T:PowerShellWSTT.SendXmlOperation">
+            <summary>
+            <para type="name">Send-XmlOperation</para>
+            <para type="synopsis">Sends an Xml Operation to a SOAP Service</para>
+            <para type="description">The Send-XmlOperation cmdlet sends soap operations to the local server or on a remote server.</para>
+            <para type="description">To use Send-XmlOperation, pipe an object or pipe an csv file or pass parameters to Send-XmlOperation.</para>
+            </summary>
+            <para type="link">Get-XmlOperation</para>
+            <para type="link">New-ServiceConnection</para>
+            <para type="link">ConvertTo-Splat</para>
+            <example>
+              <code>PS C:\>$response = Send-XmlOperation -XmlRequest $testRequest -ServiceConnection $connection -Verbose</code>
+              <para>This sends an xml request to the server in the service connection and gets back an xml saop response object.</para>n
+            </example>
+        </member>
+        <member name="P:PowerShellWSTT.SendXmlOperation.XmlRequest">
+            <summary>
+            <para type="description">Name of the Institution.</para>
+            </summary>
+        </member>
+        <member name="P:PowerShellWSTT.SendXmlOperation.ServiceConnection">
+            <summary>
+            <para type="description">Service Connection to a SOAP Endpoint, defaults to localhost.</para>
+            </summary>
+        </member>
+    </members>
+</doc>

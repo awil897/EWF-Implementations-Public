@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>QA.Debug</name>
+    </assembly>
+    <members>
+        <member name="T:QA.Debug.CallerIdentifier">
+            <summary>
+            CallerIdentifier to catch the object off the stack.
+            </summary>
+        </member>
+        <member name="F:QA.Debug.CallerIdentifier.logger">
+            <summary>
+            The logger
+            </summary>
+        </member>
+        <member name="M:QA.Debug.CallerIdentifier.DetermineCallerIdentity(System.String)">
+            <summary>
+            Determines the caller identity.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:QA.Debug.CallerIdentifier.ExtractVariableNameFrom(System.Diagnostics.StackFrame,System.String)">
+            <summary>
+            Extracts the variable name from.
+            </summary>
+            <param name="frame">The frame.</param>
+            <param name="variableNameToLookFor">The variable name to look for.</param>
+            <returns></returns>
+        </member>
+        <member name="T:QA.Debug.CallerIdentifier.CustomAssertionAttribute">
+            <summary>
+            Marks a method as an extension to Fluent Assertions that either uses the built-in assertions
+            internally, or directly uses the <c>Execute.Assertion</c>.
+            </summary>
+        </member>
+        <member name="M:QA.Debug.CallerIdentifier.HasAttribute``1(System.Reflection.MemberInfo)">
+            <summary>
+                Determines whether the specified method has been annotated with a specific attribute.
+            </summary>
+            <returns>
+                <c>true</c> if the specified method has attribute; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:QA.Debug.DLLSetup">
+            <summary>
+            Base Load DLL to be called in the global assembly
+            </summary>
+        </member>
+        <member name="M:QA.Debug.DLLSetup.LoadDLL">
+            <summary>
+            Loads the DLL so that debug can call it.
+            </summary>
+        </member>
+        <member name="T:QA.Debug.QADebugConfigClass">
+            <summary>
+            LinqPad Path Class
+            </summary>
+        </member>
+        <member name="P:QA.Debug.QADebugConfigClass.LINQPadExePath">
+            <summary>
+            Gets or sets the linq pad executable path.
+            </summary>
+            <value>
+            The linq pad executable path.
+            </value>
+        </member>
+        <member name="T:QA.Debug.LINQPadBridge">
+            <summary>
+            Bridges the C# to the linqpad.exe
+            </summary>
+        </member>
+        <member name="M:QA.Debug.LINQPadBridge.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:QA.Debug.LINQPadBridge"/> class.
+            </summary>
+        </member>
+        <member name="M:QA.Debug.LINQPadBridge.LINQPad(System.Object,System.Boolean,System.Int32)">
+            <summary>
+            Linqs the pad.
+            </summary>
+            <param name="o">The o.</param>
+            <param name="isExpanded">if set to <c>true</c> [is expanded].</param>
+            <param name="depth">The depth.</param>
+            <returns></returns>
+        </member>
+        <member name="T:QA.Debug.XMLTools">
+            <summary>
+            XML Tools to help with serilization and deserialization
+            </summary>
+        </member>
+        <member name="M:QA.Debug.XMLTools.Serialize(System.Object)">
+            <summary>
+            Gets the XML from an object, used like: var test = this.Serialize(response); for troubleshooting.
+            </summary>
+            <param name="pObject">The object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:QA.Debug.XMLTools.Deserialize``1(System.String)">
+            <summary>
+            Deserializes the specified input.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="input">The input.</param>
+            <returns></returns>
+        </member>
+        <member name="M:QA.Debug.XMLTools.Beautify(System.String)">
+            <summary>
+            Beautifies the specified XML stuff.
+            </summary>
+            <param name="xmlStuff">The XML stuff.</param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Extensions">
+            <summary>
+            Allows to extend the LinqPad output to visual studio
+            </summary>
+        </member>
+        <member name="M:System.Extensions.DumpToFile``1(``0)">
+            <summary> 
+            Dumps LINQPad view to a temporary html file and opens in the browser. 
+            </summary> 
+            <param name="o">The object to display.</param> 
+        </member>
+        <member name="M:System.Extensions.DumpToFile``1(``0,System.Boolean,System.Int32)">
+            <summary>
+            Dumps LINQPad view to a temporary html file and opens in the browser.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="o">The object to display.</param>
+            <param name="allowExpansion">if set to <c>true</c> [allow expansion].</param>
+            <param name="depth">The depth.</param>
+        </member>
+        <member name="M:System.Extensions.Dump``1(``0)">
+            <summary>
+            Dumps LINQPad View to debugger. Used in the HTML debug view.
+            Small lumps of info seems to work, however larger dumps need to use .ToFile()
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="o">The o.</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Extensions.Dump``1(``0,System.Boolean,System.Int32)">
+            <summary>
+            Dumps LINQPad View to debugger. Used in the HTML debug view.
+            Small lumps of info seems to work, however larger dumps need to use .ToFile()
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="o">The o.</param>
+            <param name="allowExpansion">if set to <c>true</c> [allow expansion].</param>
+            <param name="depth">The depth.</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Extensions.ToXml(System.Object)">
+            <summary>
+            To the serialized object for debugging.
+            </summary>
+            <param name="o">The o.</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Extensions.ToOutput``1(``0)">
+            <summary>
+            Outputs the specified the object to the Test Explorer's output window into a link called "Output".
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="o">The object.</param>
+        </member>
+    </members>
+</doc>

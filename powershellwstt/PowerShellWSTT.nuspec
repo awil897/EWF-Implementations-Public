@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>PowerShellWSTT</id>
+    <version>1.0.9</version>
+    <authors>Matthew Morrow</authors>
+    <owners>Jack Henry &amp; Associates, Inc.</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This is the PowerShell web service test tool</description>
+    <releaseNotes>added cleanup for xsi:nil</releaseNotes>
+    <copyright>Copyright (c) 1999-2018, Jack Henry &amp; Associates, Inc.(r)  All Rights Reserved.</copyright>
+    <tags>PSModule PSIncludes_Cmdlet PSCmdlet_Get-XmlOperation PSCmdlet_New-ServiceConnection PSCmdlet_Send-XmlOperation PSIncludes_Function PSFunction_Get-ScriptDirectory PSCommand_Get-XmlOperation PSCommand_New-ServiceConnection PSCommand_Send-XmlOperation PSCommand_Get-ScriptDirectory</tags>
+  </metadata>
+</package>

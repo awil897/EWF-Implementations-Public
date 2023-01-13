@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>TestWSTT</id>
+    <version>1.0.17</version>
+    <authors>Matthew Morrow</authors>
+    <owners>Jack Henry &amp; Associates, Inc.</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This is the PowerShell JMC</description>
+    <releaseNotes>This is a test library for use with TestWSTT</releaseNotes>
+    <copyright>Copyright (c) 1999-2018, Jack Henry &amp; Associates, Inc.(r)  All Rights Reserved.</copyright>
+    <tags>PSModule PSIncludes_Function PSFunction_Test-SgAcctHistSrch PSFunction_Test-SgBilPayPayeeInq PSFunction_Test-SgBrdCstSrch PSFunction_Test-SgBSADueDilgntRsInq PSFunction_Test-SgChkImgInq PSFunction_Test-SgChkRiskInq PSFunction_Test-SgCrCardRwrdlinq PSFunction_Test-SgCrCardTrnAdd PSFunction_Test-SgCRMEventSrch PSFunction_Test-SgCurrRateFeeSrch PSFunction_Test-SgCustInq PSFunction_Test-SgCustSrch PSFunction_Test-SgDocElecInq PSFunction_Test-SgDocImgSrch PSFunction_Test-SgEFTCardPINMod PSFunction_Test-SgEFTCardPINOffSetMod PSFunction_Test-SgEmplJobSrch PSFunction_Test-SgEntityMatchBatchInq PSFunction_Test-SgEntityMatchSrch PSFunction_Test-SgIntnetFinInstIdPINMod PSFunction_Test-SgIntnetFinInstUsrAuthenInq PSFunction_Test-SgLogSrch PSFunction_Test-SgMFAActRiskInq PSFunction_Test-SgMFATokenValidate PSFunction_Test-SgNotEmailAlrtAdd PSFunction_Test-SgNotMobPhoneValidate PSFunction_Test-SgNotRecipInq PSFunction_Test-SgNotSMSAlrtAdd PSFunction_Test-SgODISvcCred PSFunction_Test-SgOOBValidate PSFunction_Test-SgPing PSFunction_Test-SgPltfmProdSrch PSFunction_Test-SgTellerCustSrch PSFunction_Test-SgUsrEnrollInq PSFunction_Test-SgWireIntlTrnInq PSFunction_Test-SgWorkflowInstcSrch PSCommand_Test-SgAcctHistSrch PSCommand_Test-SgBilPayPayeeInq PSCommand_Test-SgBrdCstSrch PSCommand_Test-SgBSADueDilgntRsInq PSCommand_Test-SgChkImgInq PSCommand_Test-SgChkRiskInq PSCommand_Test-SgCrCardRwrdlinq PSCommand_Test-SgCrCardTrnAdd PSCommand_Test-SgCRMEventSrch PSCommand_Test-SgCurrRateFeeSrch PSCommand_Test-SgCustInq PSCommand_Test-SgCustSrch PSCommand_Test-SgDocElecInq PSCommand_Test-SgDocImgSrch PSCommand_Test-SgEFTCardPINMod PSCommand_Test-SgEFTCardPINOffSetMod PSCommand_Test-SgEmplJobSrch PSCommand_Test-SgEntityMatchBatchInq PSCommand_Test-SgEntityMatchSrch PSCommand_Test-SgIntnetFinInstIdPINMod PSCommand_Test-SgIntnetFinInstUsrAuthenInq PSCommand_Test-SgLogSrch PSCommand_Test-SgMFAActRiskInq PSCommand_Test-SgMFATokenValidate PSCommand_Test-SgNotEmailAlrtAdd PSCommand_Test-SgNotMobPhoneValidate PSCommand_Test-SgNotRecipInq PSCommand_Test-SgNotSMSAlrtAdd PSCommand_Test-SgODISvcCred PSCommand_Test-SgOOBValidate PSCommand_Test-SgPing PSCommand_Test-SgPltfmProdSrch PSCommand_Test-SgTellerCustSrch PSCommand_Test-SgUsrEnrollInq PSCommand_Test-SgWireIntlTrnInq PSCommand_Test-SgWorkflowInstcSrch</tags>
+  </metadata>
+</package>

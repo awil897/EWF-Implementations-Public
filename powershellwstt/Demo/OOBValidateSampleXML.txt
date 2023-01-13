@@ -1,0 +1,20 @@
+<OOBValidate xmlns="http://jackhenry.com/jxchange/TPG/2008">
+          <MsgRqHdr>
+                    <jXchangeHdr>
+                              <AuditUsrId>PA</AuditUsrId>
+                              <AuditWsId>IDG</AuditWsId>
+                              <ConsumerName>JHA</ConsumerName>
+                              <ConsumerProd>iPay</ConsumerProd>
+                              <jXLogTrackingId>987654321</jXLogTrackingId>
+                              <InstRtId JHANull="" Rstr="">291074748</InstRtId>
+                              <InstEnv>PROD</InstEnv>
+                              <ValidConsmName>JHA</ValidConsmName>
+                              <ValidConsmProd>iPay</ValidConsmProd>
+                    </jXchangeHdr>
+          </MsgRqHdr>
+          <InstRtId JHANull="" Rstr="">291074748</InstRtId>
+          <ConsumerProd>iPay</ConsumerProd>
+          <PhoneNum JHANull="" Rstr="" SrchType="">4178463371</PhoneNum>
+          <OOBModeType>OneWay</OOBModeType>
+		  <SMSText>valueToSend</SMSText>
+</OOBValidate>

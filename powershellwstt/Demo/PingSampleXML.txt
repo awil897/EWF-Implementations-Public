@@ -1,0 +1,3 @@
+                    <Ping xmlns="http://jackhenry.com/jxchange/TPG/2008">
+                              <PingRq>I am Testing Ping Here, Hello?</PingRq>
+                    </Ping>

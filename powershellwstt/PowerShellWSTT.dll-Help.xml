@@ -1,0 +1,585 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<helpItems schema="maml" xmlns="http://msh">
+  <!-- Cmdlet: New-ServiceConnection -->
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+    <command:details>
+      <command:name>New-ServiceConnection</command:name>
+      <command:verb>New</command:verb>
+      <command:noun>ServiceConnection</command:noun>
+      <maml:description>
+        <maml:para>Creates a new Service Connection to access a local or remote web server.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The New-ServiceConnection cmdlet creates connection settings to local server or on a remote server.</maml:para>
+      <maml:para>To use New-ServiceConnection, pipe an object or pass parameters to New-ServiceConnection.</maml:para>
+      <maml:para>Then pass the New-ServiceConnection as a parm into other PowerShellWSTT cmdlets.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <!-- Parameter set: __AllParameterSets -->
+      <command:syntaxItem>
+        <maml:name>New-ServiceConnection</maml:name>
+        <!-- Parameter: Password -->
+        <command:parameter required="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named">
+          <maml:name>Password</maml:name>
+          <maml:description>
+            <maml:para>Password for the connection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true">SecureString</command:parameterValue>
+          <dev:type>
+            <maml:name>System.Security.SecureString</maml:name>
+            <maml:uri />
+          </dev:type>
+        </command:parameter>
+        <!-- Parameter: UserName -->
+        <command:parameter required="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named">
+          <maml:name>UserName</maml:name>
+          <maml:description>
+            <maml:para>Username for the connection in 'user@domain.com' format.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true">string</command:parameterValue>
+          <dev:type>
+            <maml:name>System.String</maml:name>
+            <maml:uri />
+          </dev:type>
+        </command:parameter>
+        <!-- Parameter: EndpointKind -->
+        <command:parameter required="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named">
+          <maml:name>EndpointKind</maml:name>
+          <maml:description>
+            <maml:para>Specify the EndPointSvc URL kind, defaults to ServiceGateway</maml:para>
+            <maml:para>Possible values: ServiceGateway, IdentityManagement, PersistentStorage, EnterpriseLogging, Broadcastevent, EnterpriseAudit</maml:para>
+          </maml:description>
+          <command:parameterValue required="true">EndpointSvcKind</command:parameterValue>
+          <dev:type>
+            <maml:name>PowerShellWSTT.Common.EndpointSvcKind</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>ServiceGateway</dev:defaultValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">ServiceGateway</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">IdentityManagement</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PersistentStorage</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">EnterpriseLogging</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Broadcastevent</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">EnterpriseAudit</command:parameterValue>
+          </command:parameterValueGroup>
+        </command:parameter>
+        <!-- Parameter: EndPointSvc -->
+        <command:parameter required="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named">
+          <maml:name>EndPointSvc</maml:name>
+          <maml:description>
+            <maml:para>Can be used to set the EndPointSvc URL, defaults to servicegateway.svc</maml:para>
+          </maml:description>
+          <command:parameterValue required="true">string</command:parameterValue>
+          <dev:type>
+            <maml:name>System.String</maml:name>
+            <maml:uri />
+          </dev:type>
+        </command:parameter>
+        <!-- Parameter: ServerName -->
+        <command:parameter required="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named">
+          <maml:name>ServerName</maml:name>
+          <maml:description>
+            <maml:para>Can be used to specify the ServerName.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true">string</command:parameterValue>
+          <dev:type>
+            <maml:name>System.String</maml:name>
+            <maml:uri />
+          </dev:type>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <!-- Parameter: ServerName -->
+      <command:parameter required="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named">
+        <maml:name>ServerName</maml:name>
+        <maml:description>
+          <maml:para>Can be used to specify the ServerName.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">string</command:parameterValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+      </command:parameter>
+      <!-- Parameter: EndPointSvc -->
+      <command:parameter required="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named">
+        <maml:name>EndPointSvc</maml:name>
+        <maml:description>
+          <maml:para>Can be used to set the EndPointSvc URL, defaults to servicegateway.svc</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">string</command:parameterValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+      </command:parameter>
+      <!-- Parameter: EndpointKind -->
+      <command:parameter required="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named">
+        <maml:name>EndpointKind</maml:name>
+        <maml:description>
+          <maml:para>Specify the EndPointSvc URL kind, defaults to ServiceGateway</maml:para>
+          <maml:para>Possible values: ServiceGateway, IdentityManagement, PersistentStorage, EnterpriseLogging, Broadcastevent, EnterpriseAudit</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">EndpointSvcKind</command:parameterValue>
+        <dev:type>
+          <maml:name>PowerShellWSTT.Common.EndpointSvcKind</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>ServiceGateway</dev:defaultValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">ServiceGateway</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">IdentityManagement</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PersistentStorage</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">EnterpriseLogging</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Broadcastevent</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">EnterpriseAudit</command:parameterValue>
+        </command:parameterValueGroup>
+      </command:parameter>
+      <!-- Parameter: UserName -->
+      <command:parameter required="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named">
+        <maml:name>UserName</maml:name>
+        <maml:description>
+          <maml:para>Username for the connection in 'user@domain.com' format.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">string</command:parameterValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+      </command:parameter>
+      <!-- Parameter: Password -->
+      <command:parameter required="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named">
+        <maml:name>Password</maml:name>
+        <maml:description>
+          <maml:para>Password for the connection.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">SecureString</command:parameterValue>
+        <dev:type>
+          <maml:name>System.Security.SecureString</maml:name>
+          <maml:uri />
+        </dev:type>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <maml:description>
+          <maml:para>Can be used to specify the ServerName.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <maml:description>
+          <maml:para>Can be used to set the EndPointSvc URL, defaults to servicegateway.svc</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>PowerShellWSTT.Common.EndpointSvcKind</maml:name>
+          <maml:uri />
+        </dev:type>
+        <maml:description>
+          <maml:para>Specify the EndPointSvc URL kind, defaults to ServiceGateway</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <maml:description>
+          <maml:para>Username for the connection in 'user@domain.com' format.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.Security.SecureString</maml:name>
+          <maml:uri />
+        </dev:type>
+        <maml:description>
+          <maml:para>Password for the connection.</maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <!-- OutputType: NewServiceConnection -->
+      <command:returnValue>
+        <dev:type>
+          <maml:name>PowerShellWSTT.NewServiceConnection</maml:name>
+          <maml:uri />
+        </dev:type>
+        <maml:description>
+          <maml:para>The New-ServiceConnection cmdlet creates connection settings to local server or on a remote server.</maml:para>
+          <maml:para>To use New-ServiceConnection, pipe an object or pass parameters to New-ServiceConnection.</maml:para>
+          <maml:para>Then pass the New-ServiceConnection as a parm into other PowerShellWSTT cmdlets.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <command:examples>
+      <command:example>
+        <maml:title>----------  EXAMPLE 1  ----------</maml:title>
+        <dev:code>PS C:\&gt;$password = ConvertTo-SecureString -String "my super password" -AsPlainText -Force
+PS C:\&gt;$connection = New-ServiceConnection -UserName "me@domain.com" -Password $password -ServerName "myServer.jha-sys.com"</dev:code>
+        <dev:remarks>
+          <maml:para>This sends an xml request to the server in the service connection and gets back an xml saop response object.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Get-XmlOperation</maml:linkText>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Send-XmlOperation</maml:linkText>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Get-Credential</maml:linkText>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>ConvertTo-Splat</maml:linkText>
+      </maml:navigationLink>
+    </maml:relatedLinks>
+  </command:command>
+  <!-- Cmdlet: Get-XmlOperation -->
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+    <command:details>
+      <command:name>Get-XmlOperation</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>XmlOperation</command:noun>
+      <maml:description>
+        <maml:para>Creates a new XmlDocument with cleaning options.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The Get-XmlOperation cmdlet creates a new XmlDocument from a file path or xml string.</maml:para>
+      <maml:para>To use Get-XmlOperation, pipe an object or pass parameters to Get-XmlOperation then send this information to Send-XmlOperation.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <!-- Parameter set: __AllParameterSets -->
+      <command:syntaxItem>
+        <maml:name>Get-XmlOperation</maml:name>
+        <!-- Parameter: Path -->
+        <command:parameter required="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="0">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Pass in the xml file 'Path' or the 'XmlString'.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true">string</command:parameterValue>
+          <dev:type>
+            <maml:name>System.String</maml:name>
+            <maml:uri />
+          </dev:type>
+        </command:parameter>
+        <!-- Parameter: XmlString -->
+        <command:parameter required="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="0">
+          <maml:name>XmlString</maml:name>
+          <maml:description>
+            <maml:para>Pass in the xml file 'Path' or the 'XmlString'.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true">string</command:parameterValue>
+          <dev:type>
+            <maml:name>System.String</maml:name>
+            <maml:uri />
+          </dev:type>
+        </command:parameter>
+        <!-- Parameter: CleanXml -->
+        <command:parameter required="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+          <maml:name>CleanXml</maml:name>
+          <maml:description>
+            <maml:para>Toggle to clean the xml before it creates an XmlDocument, Cleaning currently removes ' JHANull="" Rstr="" SrchType="" MaskVal="" OvrrdInstRtId="" JHANA="" NotOccurType="" xsi:nil="true"'</maml:para>
+          </maml:description>
+          <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <!-- Parameter: ClearWhiteSpace -->
+        <command:parameter required="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+          <maml:name>ClearWhiteSpace</maml:name>
+          <maml:description>
+            <maml:para>Toggle to clear Whitespace before creaing an xmldocument</maml:para>
+          </maml:description>
+          <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <!-- Parameter: Path -->
+      <command:parameter required="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="0">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Pass in the xml file 'Path' or the 'XmlString'.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">string</command:parameterValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+      </command:parameter>
+      <!-- Parameter: XmlString -->
+      <command:parameter required="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="0">
+        <maml:name>XmlString</maml:name>
+        <maml:description>
+          <maml:para>Pass in the xml file 'Path' or the 'XmlString'.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">string</command:parameterValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+      </command:parameter>
+      <!-- Parameter: CleanXml -->
+      <command:parameter required="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+        <maml:name>CleanXml</maml:name>
+        <maml:description>
+          <maml:para>Toggle to clean the xml before it creates an XmlDocument, Cleaning currently removes ' JHANull="" Rstr="" SrchType="" MaskVal="" OvrrdInstRtId="" JHANA="" NotOccurType="" xsi:nil="true"'</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <!-- Parameter: ClearWhiteSpace -->
+      <command:parameter required="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+        <maml:name>ClearWhiteSpace</maml:name>
+        <maml:description>
+          <maml:para>Toggle to clear Whitespace before creaing an xmldocument</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <maml:description>
+          <maml:para>Pass in the xml file 'Path' or the 'XmlString'.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <maml:description>
+          <maml:para>Pass in the xml file 'Path' or the 'XmlString'.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <maml:description>
+          <maml:para>Toggle to clean the xml before it creates an XmlDocument, Cleaning currently removes ' JHANull="" Rstr="" SrchType="" MaskVal="" OvrrdInstRtId="" JHANA="" NotOccurType="" xsi:nil="true"'</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <maml:description>
+          <maml:para>Toggle to clear Whitespace before creaing an xmldocument</maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <!-- OutputType: XmlDocument -->
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.Xml.XmlDocument</maml:name>
+          <maml:uri />
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <command:examples>
+      <command:example>
+        <maml:title>----------  EXAMPLE 1  ----------</maml:title>
+        <dev:code>PS C:\&gt;$testRequest = Get-XmlOperation -Path .\Demo\PingSampleXML.txt</dev:code>
+        <dev:remarks>
+          <maml:para>This gets a file or xml string operation and creates a new Xml Request Document from that operation.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>----------  EXAMPLE 2  ----------</maml:title>
+        <dev:code>PS C:\&gt;$testRequest = Get-XmlOperation -Path .\Demo\PingSampleXML.txt -CleanXml</dev:code>
+        <dev:remarks>
+          <maml:para>This gets a file or xml string operation, then cleans it and then creates a new Xml Request Document from that operation.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Send-XmlOperation</maml:linkText>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>New-ServiceConnection</maml:linkText>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Get-Content</maml:linkText>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Get-Credential</maml:linkText>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>ConvertTo-Splat</maml:linkText>
+      </maml:navigationLink>
+    </maml:relatedLinks>
+  </command:command>
+  <!-- Cmdlet: Send-XmlOperation -->
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+    <command:details>
+      <command:name>Send-XmlOperation</command:name>
+      <command:verb>Send</command:verb>
+      <command:noun>XmlOperation</command:noun>
+      <maml:description>
+        <maml:para>Sends an Xml Operation to a SOAP Service</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The Send-XmlOperation cmdlet sends soap operations to the local server or on a remote server.</maml:para>
+      <maml:para>To use Send-XmlOperation, pipe an object or pipe an csv file or pass parameters to Send-XmlOperation.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <!-- Parameter set: __AllParameterSets -->
+      <command:syntaxItem>
+        <maml:name>Send-XmlOperation</maml:name>
+        <!-- Parameter: ServiceConnection -->
+        <command:parameter required="true" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+          <maml:name>ServiceConnection</maml:name>
+          <maml:description>
+            <maml:para>Service Connection to a SOAP Endpoint, defaults to localhost.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true">NewServiceConnection</command:parameterValue>
+          <dev:type>
+            <maml:name>PowerShellWSTT.NewServiceConnection</maml:name>
+            <maml:uri />
+            <maml:description>
+              <maml:para>The New-ServiceConnection cmdlet creates connection settings to local server or on a remote server.</maml:para>
+              <maml:para>To use New-ServiceConnection, pipe an object or pass parameters to New-ServiceConnection.</maml:para>
+              <maml:para>Then pass the New-ServiceConnection as a parm into other PowerShellWSTT cmdlets.</maml:para>
+            </maml:description>
+          </dev:type>
+        </command:parameter>
+        <!-- Parameter: XmlRequest -->
+        <command:parameter required="true" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+          <maml:name>XmlRequest</maml:name>
+          <maml:description>
+            <maml:para>Name of the Institution.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true">XmlDocument</command:parameterValue>
+          <dev:type>
+            <maml:name>System.Xml.XmlDocument</maml:name>
+            <maml:uri />
+          </dev:type>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <!-- Parameter: XmlRequest -->
+      <command:parameter required="true" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+        <maml:name>XmlRequest</maml:name>
+        <maml:description>
+          <maml:para>Name of the Institution.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">XmlDocument</command:parameterValue>
+        <dev:type>
+          <maml:name>System.Xml.XmlDocument</maml:name>
+          <maml:uri />
+        </dev:type>
+      </command:parameter>
+      <!-- Parameter: ServiceConnection -->
+      <command:parameter required="true" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+        <maml:name>ServiceConnection</maml:name>
+        <maml:description>
+          <maml:para>Service Connection to a SOAP Endpoint, defaults to localhost.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">NewServiceConnection</command:parameterValue>
+        <dev:type>
+          <maml:name>PowerShellWSTT.NewServiceConnection</maml:name>
+          <maml:uri />
+          <maml:description>
+            <maml:para>The New-ServiceConnection cmdlet creates connection settings to local server or on a remote server.</maml:para>
+            <maml:para>To use New-ServiceConnection, pipe an object or pass parameters to New-ServiceConnection.</maml:para>
+            <maml:para>Then pass the New-ServiceConnection as a parm into other PowerShellWSTT cmdlets.</maml:para>
+          </maml:description>
+        </dev:type>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.Xml.XmlDocument</maml:name>
+          <maml:uri />
+        </dev:type>
+        <maml:description>
+          <maml:para>Name of the Institution.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>PowerShellWSTT.NewServiceConnection</maml:name>
+          <maml:uri />
+        </dev:type>
+        <maml:description>
+          <maml:para>Service Connection to a SOAP Endpoint, defaults to localhost.</maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <!-- OutputType: WebProxyResponse -->
+      <command:returnValue>
+        <dev:type>
+          <maml:name>PowerShellWSTT.Common.WebProxyResponse</maml:name>
+          <maml:uri />
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <command:examples>
+      <command:example>
+        <maml:title>----------  EXAMPLE 1  ----------</maml:title>
+        <dev:code>PS C:\&gt;$response = Send-XmlOperation -XmlRequest $testRequest -ServiceConnection $connection -Verbose</dev:code>
+        <dev:remarks>
+          <maml:para>This sends an xml request to the server in the service connection and gets back an xml saop response object.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Get-XmlOperation</maml:linkText>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>New-ServiceConnection</maml:linkText>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>ConvertTo-Splat</maml:linkText>
+      </maml:navigationLink>
+    </maml:relatedLinks>
+  </command:command>
+</helpItems>
