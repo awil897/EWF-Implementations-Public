@@ -1,6 +1,7 @@
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $ErrorActionPreference = "Continue"
 
+#download modules
 if (Get-Module -ListAvailable -Name Carbon) {
     Write-Host "Carbon Module already installed"
     Import-Module carbon
@@ -17,8 +18,65 @@ else {
     }
 }
 
+Write-Host "`nChecking for certificate issues" -ForegroundColor Yellow
+#wrap these if if/else/try/catch
+Try {
+    
+    Write-Host "`nGetting Certificate bound to port 443"
+    $sslCertObject = (Get-SslCertificateBinding -port 443)
+    $cert = Get-CCertificate -Thumbprint $sslCertObject.CertificateHash -StoreName $sslcertobject.CertificateStoreName -StoreLocation LocalMachine -NoWarn
+    $certname = ($cert.DnsNameList.unicode).tolower()
+    Write-Host "Success!" -ForegroundColor Green
+    Write-Host "Certificate Found for "$($certname)""
+    $hostFQDN = (([System.Net.Dns]::GetHostByName($env:computerName)).hostname).tolower()
+    
+    If ($certname -match $hostFQDN){
+        Write-Host "The CN on the Certificate matches the FQDN of this server" -ForegroundColor Green
+    }
+    Else {
+        Write-Host "The CN on the Certificate does not match the Hostname of this server. `nVerify that the certificate bound to port 443 should be named $($certname)" -ForegroundColor Yellow
+    }
+}
+Catch {
+    Write-Host "I'm having trouble verify the certificates automatically, you will need to check these manually" -ForegroundColor Yellow
+}
+
+Try {
+    $sslCertObject = (Get-SslCertificateBinding -port 443)
+    $cert = Get-CCertificate -Thumbprint $sslCertObject.CertificateHash -StoreName $sslcertobject.CertificateStoreName -StoreLocation LocalMachine -NoWarn
+    $certname = ($cert.DnsNameList.unicode).tolower()
+    $dnsQuery = Resolve-DnsName -Name $certname -DnsOnly -NoHostsFile
+    Write-Host "DNS Exists" -ForegroundColor Green
+}
+Catch{
+    Write-Host "DNS Bad" -ForegroundColor Red
+}
+
+Try {
+    [Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+    $url = "https://" + $certname
+    $req = [Net.HttpWebRequest]::Create($url)
+    $req.GetResponse() | Out-Null
+    $certStart = [DateTime]($req.ServicePoint.Certificate.GetEffectiveDateString()).toString()
+    $certEnd = [DateTime]($req.ServicePoint.Certificate.GetExpirationDateString()).toString()
+    $Now = Get-Date 
+    if (($certStart -lt $now) -and ($certEnd -gt $now)){
+        Write-Host "The SSL Certificate bound to port 443 dates are valid" -ForegroundColor Green
+    }
+    if ($certStart -gt $now){
+        Write-Host "The SSL Certificate bound to port 443 is not valid until $certStart" -ForegroundColor Yellow
+    }
+    if ($certEnd -lt $now){
+        $expiredDays = (New-TimeSpan -Start $certEnd -End $Now).Days
+        Write-Host "The SSL Certificate bound to port 443 expired $expiredDays ago on $certEnd" -ForegroundColor Red
+    }
+}
+Catch {
+    
+}
 
 
+#test web access
 Write-Host "`nTesting connection to required websites" -ForegroundColor Yellow
 Start-Sleep -Seconds 1
 Write-Host "Checking jhadownloads.JackHenry.com"
@@ -117,11 +175,10 @@ if (Test-Path -LiteralPath $outputDir) {
     }
 }
 Start-Sleep -Seconds 1
+$testResults
 
+Start-Sleep -Seconds 1
 Write-Host "Loading Test UI"
 Invoke-Expression (Invoke-WebRequest -UseBasicParsing 'https://raw.githubusercontent.com/awil897/EWF-Implementations-Public/main/ServerTests/Invoke-SynNodeUITests.ps1')
-
-
-$testResults
 
 Read-Host -Prompt “Press Enter to exit”
