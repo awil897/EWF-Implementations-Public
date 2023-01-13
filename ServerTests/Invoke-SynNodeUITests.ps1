@@ -119,6 +119,9 @@ if($selected){Remove-Variable selected}
 
 $Form.controls.AddRange(@($Username,$PassBox,$JxBox,$EnvBox,$AbaBox,$ListButton,$ProviderComboBox,$DataGridView1,$AbaLabel,$EnvironmentLabel,$UserLabel,$PassLabel,$JxLabel))
 $ProviderComboBox.items.Add("Choose a test")
+$ProviderComboBox.Items.add("SynNode Tests") 
+$ProviderComboBox.Items.add("jXchange Tests") 
+$ProviderComboBox.Items.add("SvcDictSrch") 
 $ProviderComboBox.Items.add("PubWorkflowSrch") 
 
 $ProviderComboBox.SelectedIndex = $ProviderComboBox.FindStringExact("Choose a test")
