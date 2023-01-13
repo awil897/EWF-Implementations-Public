@@ -1,10 +1,4 @@
-﻿<# 
-.NAME
-    Get-ProviderInfo
-#>
-
-#Optional hard-coded values
-$jxFarmString = "jxapp.jhahosted.com"
+﻿$jxFarmString = "jxapp.jhahosted.com"
 $credString = "username@jhahosting.com"
 $passString = ""
 $abaString = "123456789"
