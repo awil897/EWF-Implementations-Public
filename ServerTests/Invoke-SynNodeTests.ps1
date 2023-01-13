@@ -307,6 +307,7 @@ if (Test-Path -LiteralPath $outputDir) {
 Start-Sleep -Seconds 1
 
 Write-Host "Loading Test UI"
-Invoke-Expression (Invoke-WebRequest -UseBasicParsing https://raw.githubusercontent.com/awil897/EWF-Implementations-Public/main/ServerTests/Invoke-JHEWFBaseServerTests.ps1)
+Invoke-Expression (Invoke-WebRequest -UseBasicParsing 'https://raw.githubusercontent.com/awil897/EWF-Implementations-Public/main/ServerTests/Get-SGProviderInformation.ps1')
+https://raw.githubusercontent.com/awil897/EWF-Implementations-Public/main/ServerTests/Get-SGProviderInformation.ps1
 
 return $testResults
