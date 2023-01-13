@@ -1,9 +1,4 @@
-﻿$jxFarmString = "jxapp.jhahosted.com"
-$credString = "username@jhahosting.com"
-$passString = ""
-$abaString = "123456789"
-$envString = "PROD"
-
+﻿
 
 ####################################################
 Add-Type -AssemblyName System.Windows.Forms
@@ -11,12 +6,12 @@ Add-Type -AssemblyName System.Windows.Forms
 
 $Form                            = New-Object system.Windows.Forms.Form
 $Form.ClientSize                 = New-Object System.Drawing.Point(894,465)
-$Form.text                       = "Get SG Provider Info"
+$Form.text                       = "Synergy/EWF Integration Tests"
 $Form.TopMost                    = $false
 
 
 $Username                        = New-Object system.Windows.Forms.TextBox
-$Username.text                   = "$($credString)"
+$Username.text                   = "EWF-ToJXServices@dev.jha"
 $Username.multiline              = $false
 $Username.width                  = 160
 $Username.height                 = 20
@@ -24,7 +19,7 @@ $Username.location               = New-Object System.Drawing.Point(151,11)
 $Username.Font                   = New-Object System.Drawing.Font('Microsoft Sans Serif',14)
 
 $PassBox                         = New-Object system.Windows.Forms.TextBox
-$PassBox.Text                    = "$($passString)"
+$PassBox.Text                    = "tr3R7fMrP5"
 $PassBox.PasswordChar            = "*"
 $PassBox.multiline               = $false
 $PassBox.width                   = 160
@@ -34,14 +29,14 @@ $PassBox.Font                    = New-Object System.Drawing.Font('Microsoft San
 
 $JxBox                           = New-Object system.Windows.Forms.TextBox
 $JxBox.multiline                 = $false
-$JxBox.text                      = "$($jxFarmString)"
+$JxBox.text                      = "jxchange.gadev.jha-sys.com"
 $JxBox.width                     = 160
 $JxBox.height                    = 20
 $JxBox.location                  = New-Object System.Drawing.Point(152,99)
 $JxBox.Font                      = New-Object System.Drawing.Font('Microsoft Sans Serif',14)
 
 $EnvBox                          = New-Object system.Windows.Forms.TextBox
-$EnvBox.Text                     = "$($envString)"
+$EnvBox.Text                     = "PROD"
 $EnvBox.multiline                = $false
 $EnvBox.width                    = 100
 $EnvBox.height                   = 20
@@ -73,7 +68,7 @@ $JxLabel.location                = New-Object System.Drawing.Point(38,99)
 $JxLabel.Font                    = New-Object System.Drawing.Font('Microsoft Sans Serif',14)
 
 $AbaBox                          = New-Object system.Windows.Forms.TextBox
-$AbaBox.Text                     = "$($abaString)"
+$AbaBox.Text                     = "222000777"
 $AbaBox.multiline                = $false
 $AbaBox.width                    = 114
 $AbaBox.height                   = 20
@@ -89,16 +84,16 @@ $AbaLabel.location               = New-Object System.Drawing.Point(41,219)
 $AbaLabel.Font                   = New-Object System.Drawing.Font('Microsoft Sans Serif',14)
 
 $ListButton                      = New-Object system.Windows.Forms.Button
-$ListButton.text                 = "Populate Provider List"
+$ListButton.text                 = "Perform Test"
 $ListButton.width                = 161
 $ListButton.height               = 30
-$ListButton.location             = New-Object System.Drawing.Point(92,289)
+$ListButton.location             = New-Object System.Drawing.Point(92,340)
 $ListButton.Font                 = New-Object System.Drawing.Font('Microsoft Sans Serif',10)
 
 $ProviderComboBox                = New-Object system.Windows.Forms.ComboBox
 $ProviderComboBox.width          = 192
 $ProviderComboBox.height         = 20
-$ProviderComboBox.location       = New-Object System.Drawing.Point(76,340)
+$ProviderComboBox.location       = New-Object System.Drawing.Point(76,289)
 $ProviderComboBox.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif',14)
 
 
@@ -120,10 +115,13 @@ $EnvironmentLabel.height         = 10
 $EnvironmentLabel.location       = New-Object System.Drawing.Point(38,166)
 $EnvironmentLabel.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif',14)
 
+if($selected){Remove-Variable selected}
 
 $Form.controls.AddRange(@($Username,$PassBox,$JxBox,$EnvBox,$AbaBox,$ListButton,$ProviderComboBox,$DataGridView1,$AbaLabel,$EnvironmentLabel,$UserLabel,$PassLabel,$JxLabel))
-#ProviderComboBox.Items = $null
-$ListButton.Add_Click({ Get-ProviderList })
+$ProviderComboBox.items.Add("Choose a test")
+$ProviderComboBox.Items.add("PubWorkflowSrch") 
+
+$ProviderComboBox.SelectedIndex = $ProviderComboBox.FindStringExact("Choose a test")
 $ProviderComboBox.Add_SelectedValueChanged({ 
  
     #$pipeline = $_ | ConvertTo-Json
@@ -131,52 +129,112 @@ $ProviderComboBox.Add_SelectedValueChanged({
     $script:selected = $ProviderComboBox.SelectedItem 
     #Write-host "$selected"
     #Write-Host "$infohash"
-    Get-ProviderInformation $event $selected
+
 })
 
-#region Logic 
-function Get-ProviderInformation ($sender,$event) {
-    #$providerHash.Clear()
+$ListButton.Add_Click({ Invoke-Test })
+
+function Invoke-Test {
+    switch ($selected) {
+        "Choose a test"  {$DataGridView1.Text = "Please select a test from the dropdown menu"; break}
+        "PubWorkflowSrch"  {
+            
+            #$DataGridView1.Text = "no results"
+            #Test-PubWorkflowSrch -jXchangeFarm $jxbox.text -user $Username.text -pass $PassBox.Text -aba $AbaBox.Text -env $EnvBox.text
+            $DataGridView1.Text = Test-PubWorkflowSrch -jXchangeFarm $jxbox.text -user $Username.text -pass $PassBox.Text -aba $AbaBox.Text -env $EnvBox.text
+        ; break}
+        default {$DataGridView1.Text = "Please select a test from the dropdown menu"; break}
+     }
+}
+
+function Test-PubWorkflowSrch{ 
+    param(
+    [Parameter (Mandatory = $false)] [String]$jXchangeFarm,
+    [Parameter (Mandatory = $false)] [String]$user,
+    [Parameter (Mandatory = $false)] [String]$pass,
+    [Parameter (Mandatory = $false)] [String]$ABA,
+    [Parameter (Mandatory = $false)] [String]$ENV
+    )
+
+    $errvar = ''
+    $message = ''
+    $fullError = ''
+
+    #$password = ConvertTo-SecureString $pass -AsPlainText -Force
+    $userString = $user
     
-    $product = $event
-    $password = ConvertTo-SecureString $($PassBox.Text) -AsPlainText -Force
-    $user = $($Username.text)
-    $connection = New-JMCConnection -JMCServerName $($jxbox.Text) -JMCUserName $user -JMCPassword $password
-    $PSDefaultParameterValues = @{'Add-SGInstitution:JMCConnection'=$connection; 'New-SGProviderSilverlake:JMCConnection'=$connection; 'Add-SGProvider:JMCConnection'=$connection; 'Add-SGUser:JMCConnection'=$connection; 'New-SGProviderCIF2020:JMCConnection'=$connection; 'Add-SGHostedProviderUser:JMCConnection'=$connection; 'Get-SGInstitution:JMCConnection'=$connection; 'New-SGProviderPadapterWebService:JMCConnection'=$connection ; 'Remove-SGProvider:JMCConnection'=$connection; 'Add-IMSCustomClaim:JMCConnection'=$connection ; 'Export-SGInstitution:JMCConnection'=$connection; 'Get-SGProvider:JMCConnection'=$connection; 'New-SGProviderEnterpriseWorkflow:JMCConnection'=$connection }
-    $institutionObject = Get-SGInstitution -ABA $($ababox.text) -Environment $($envbox.text) -JMCConnection $connection
-    $datasource = ($institutionObject | Get-SGProvider -WarningAction SilentlyContinue)
-    $providerObject = ($datasource | Where-Object {$_.ProviderTypeName -like $product}).provider
-    <#$datasource.psobject.properties | ForEach-Object {
-        $providerNote = @(
-            Name = $_.name
-            Value = $_.value
-        )
-    } #>
-    #Write-host $($datasource)
-    #$datasource = $datasource | convertto-json
-    #$provider = $provider | convertto-json
-    #Write-Host $($product)
-    #Write-Host $($provider)
-    $DataGridView1.Text = ($providerObject | convertto-json)
 
-}
+    $SGABA = $aba
+    $SGEnv = $env
+    $SGFarm = $jXchangeFarm
+    
+    $uri = "https://" + $SGfarm + "/jXchange/2008/ServiceGateway/ServiceGateway.svc"
+    $headers = @{
+        'SOAPAction' = 'http://jackhenry.com/ws/PubWorkflowSrch'
+    }
+    $timestamp = Get-Date -UFormat '+%Y-%m-%dT%H:%M:%S.000Z'
+    
+    $soap = @"
+    <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+              <SOAP-ENV:Header>
+                        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                                  <wsse:UsernameToken>
+                                            <wsse:Username>$userString</wsse:Username>
+                                            <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">$pass</wsse:Password>
+                                  </wsse:UsernameToken>
+                        </wsse:Security>
+              </SOAP-ENV:Header>
+              <SOAP-ENV:Body>
+                        <PubWorkflowSrch xmlns="http://jackhenry.com/jxchange/TPG/2008">
+                                  <SrchMsgRqHdr>
+                                            <jXchangeHdr>
+                                                      <JxVer>2019.0.04.01</JxVer>
+                                                      <AuditUsrId>AuditUsrId1</AuditUsrId>
+                                                      <AuditWsId>AuditWsId1</AuditWsId>
+                                                      <InstRtId>$SGABA</InstRtId>
+                                                      <InstEnv>$SGEnv</InstEnv>
+                                            </jXchangeHdr>
+                                            <MaxRec>20</MaxRec>
+                                  </SrchMsgRqHdr>
+                        </PubWorkflowSrch>
+              </SOAP-ENV:Body>
+    </SOAP-ENV:Envelope>
+"@
+    try {
+        [xml]$return = (Invoke-WebRequest -Uri $uri -Headers $headers -Method Post -Body $soap -ContentType text/xml).content
+        $message = ($return.Envelope.Body.PubWorkflowSrchResponse.PubWorkflowSrchRecArray.PubWorkflowSrchRec).workflowname 
+        $results = "Successfully retrieved list of published workflow definitions" + "Showing first 20 results" + "`r`n" + "`r`n"
+        $body = $message -join "`r`n" | Out-String
+        $output = $results + $body
+        $output
+        }
+    catch [System.ArgumentException] {
+       $errvar | Out-String
+    }
+    catch [System.Net.WebException]{
+       $errvar | Out-String
+        
+    }
+    catch {
+        [xml]$errorResponse = $error[0].ErrorDetails
+        $errException = $error[0].Exception | Out-String
+        $errCode = $errorResponse.Envelope.body.Fault.detail.HdrFault.FaultRecInfoArray.FaultMsgRec.errCode
+        $errDesc = $errorResponse.Envelope.body.Fault.detail.HdrFault.FaultRecInfoArray.FaultMsgRec.ErrDesc
+        $fullError = [PSCustomObject]@{
+            Exception     = $errException
+            Code          = $errCode
+            Details       = $errDesc
+            }
+        $fullError | Format-List
+        }
+    }
 
-function Get-ProviderList {
-    $ProviderComboBox.items.Clear()
-    $password = ConvertTo-SecureString $($PassBox.Text) -AsPlainText -Force
-    $user = $($Username.text)
-    #Write-host "$($user)"
-    #Write-Host "$($password)"
-    $connection = New-JMCConnection -JMCServerName $($jxbox.Text) -JMCUserName $user -JMCPassword $password
-    $PSDefaultParameterValues = @{'Add-SGInstitution:JMCConnection'=$connection; 'New-SGProviderSilverlake:JMCConnection'=$connection; 'Add-SGProvider:JMCConnection'=$connection; 'Add-SGUser:JMCConnection'=$connection; 'New-SGProviderCIF2020:JMCConnection'=$connection; 'Add-SGHostedProviderUser:JMCConnection'=$connection; 'Get-SGInstitution:JMCConnection'=$connection; 'New-SGProviderPadapterWebService:JMCConnection'=$connection ; 'Remove-SGProvider:JMCConnection'=$connection; 'Add-IMSCustomClaim:JMCConnection'=$connection ; 'Export-SGInstitution:JMCConnection'=$connection; 'Get-SGProvider:JMCConnection'=$connection; 'New-SGProviderEnterpriseWorkflow:JMCConnection'=$connection }
-    $institution = Get-SGInstitution -ABA $($ababox.text) -Environment $($envbox.text) -JMCConnection $connection
-    $providers = ($institution | Get-SGProvider ).ProviderTypeName
-    foreach ($provider in $providers){
-        $ProviderComboBox.Items.Add($Provider)
-    }  
-}
+
+#region Logic 
+
+
 $global:providerArray = @()
-$DataGridView1.text = ""
+$DataGridView1.text = "before test"
 #$Username.text = whoami /upn
 #endregion
 
