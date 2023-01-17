@@ -1,6 +1,3 @@
-﻿
-
-####################################################
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
@@ -237,7 +234,7 @@ function Test-PubWorkflowSrch{
 
 
 $global:providerArray = @()
-$DataGridView1.text = "before test"
+$DataGridView1.text = "Please select a test"
 #$Username.text = whoami /upn
 #endregion
 
