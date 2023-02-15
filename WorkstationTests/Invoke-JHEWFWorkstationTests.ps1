@@ -594,29 +594,63 @@ function Test-Endpoint{
     }
     if ($dnsResult -like 'Error'){$portTest = "Test Skipped"}
     if ($dnsResult -like 'Successful') {
-        $endpointIp = ($dnsTest | Select-Object -First 1)
-        Write-host "Checking connectivity to $endpointIp on port 443"
-        Try {
-            $portTest = Test-Port -ComputerName $endpointIp -Port 443 -Timeout 300
-            if ($portTest.PortOpened -like "True"){
-                $portTest = "Successful"
-                Write-Host "Success!" -ForegroundColor Green
-            }
-            else {
-            Write-Host "There was an issue verifying connectivity to $Endpoint"
-            $portTest = "Error" 
+        $ipAddresses = (Resolve-DnsName $Endpoint -DnsOnly  -ErrorAction SilentlyContinue).Ipaddress
+        if ($ipAddresses -is [array]){
+            $portTest = @()
+            ForEach ($ipAddress in $ipAddresses){
+                $endpointIp = $ipAddress
+                Write-host "Checking connectivity to $endpointIp on port 443"
+                Try {
+                    $portTestAttempt = Test-Port -ComputerName $endpointIp -Port 443 -Timeout 300
+                    if ($portTestAttempt.PortOpened -like "True"){
+                        $portTestAttempt = "Successful"
+                        Write-Host "Success!" -ForegroundColor Green
+                        $portTest += $portTestAttempt
+                    }
+                    else {
+                    Write-Host "There was an issue verifying connectivity to $endpointIp"
+                    $portTestAttempt = "Error"
+                    $portTest += $portTestAttempt
+                    }
+                }
+                Catch {
+                    Write-Host "There was an issue verifying connectivity to $endpointIp"
+                    if($_.ErrorDetails.Message) {
+                        $portTestAttempt = $_.ErrorDetails.Message
+                        $portTestAttempt = "Error"
+                        $portTest += $portTestAttempt
+                    } else {
+                        $portTestAttempt = $_
+                        $portTestAttempt = "Error"
+                        $portTest += $portTestAttempt
+                    }
+                }
             }
         }
-        Catch {
-            Write-Host "There was an issue verifying connectivity to $Endpoint"
-            if($_.ErrorDetails.Message) {
-                $portTest = $_.ErrorDetails.Message
-                $portTest = "Error"
-            } else {
-                $portTest = $_
-                $portTest = "Error"
+        elseif ($ipAddresses){
+            Write-host "Checking connectivity to $endpointIp on port 443"
+            Try {
+                $portTest = Test-Port -ComputerName $endpointIp -Port 443 -Timeout 300
+                if ($portTest.PortOpened -like "True"){
+                    $portTest = "Successful"
+                    Write-Host "Success!" -ForegroundColor Green
+                }
+                else {
+                Write-Host "There was an issue verifying connectivity to $Endpoint"
+                $portTest = "Error" 
+                }
             }
-        }
+            Catch {
+                Write-Host "There was an issue verifying connectivity to $Endpoint"
+                if($_.ErrorDetails.Message) {
+                    $portTest = $_.ErrorDetails.Message
+                    $portTest = "Error"
+                } else {
+                    $portTest = $_
+                    $portTest = "Error"
+                }
+            }
+        }        
     }
     $endpointResults = [PSCustomObject]@{
         'Endpoint Address' = $Endpoint
