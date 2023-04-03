@@ -10,10 +10,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   [PowerShellJMC Support](https://eisportal.jhacorp.com/ToolsSupport/#/Request?id=10 "Request Support")
 
 # Changelog
-## [1.0.68] - 2023-01-09
+## [1.0.72] - 2023-03-07
+
+### Fixed 
+- Update ODI Provider response with url
+
+## [1.0.71] - 2023-03-01
+
+### Fixed 
+- Get-SGMessageResolution to output all records
+
+## [1.0.70] - 2023-02-23
+
+### Fixed
+- Reverted Endpoints back to Hostnames and added NamedEndpointUrl's where it makes sense
+- SwitchParameters for data to Bool
+
+## [1.0.69] - 2023-01-09
 
 ### Fixed
 - Add and Update-SGProvider -ProviderTypeName 4sight, use the correct types
+
+## [1.0.68] - 2022-11-22
+
+### Fixed
+- Update-Provider not working at all
 
 ## [1.0.67] - 2022-11-21
 

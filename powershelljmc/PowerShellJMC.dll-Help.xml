@@ -21604,19 +21604,6 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
             <maml:uri />
           </dev:type>
         </command:parameter>
-        <!-- Parameter: Available -->
-        <command:parameter required="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
-          <maml:name>Available</maml:name>
-          <maml:description>
-            <maml:para>Show only Available Message Resolutions.</maml:para>
-          </maml:description>
-          <command:parameterValue required="true">SwitchParameter</command:parameterValue>
-          <dev:type>
-            <maml:name>System.Management.Automation.SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>False</dev:defaultValue>
-        </command:parameter>
         <!-- Parameter: Delay -->
         <command:parameter required="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
           <maml:name>Delay</maml:name>
@@ -21705,19 +21692,6 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
           <maml:uri />
         </dev:type>
       </command:parameter>
-      <!-- Parameter: Available -->
-      <command:parameter required="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
-        <maml:name>Available</maml:name>
-        <maml:description>
-          <maml:para>Show only Available Message Resolutions.</maml:para>
-        </maml:description>
-        <command:parameterValue required="true">SwitchParameter</command:parameterValue>
-        <dev:type>
-          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>False</dev:defaultValue>
-      </command:parameter>
       <!-- Parameter: JMCConnection -->
       <command:parameter required="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
         <maml:name>JMCConnection</maml:name>
@@ -21774,15 +21748,6 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
       </command:inputType>
       <command:inputType>
         <dev:type>
-          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
-          <maml:uri />
-        </dev:type>
-        <maml:description>
-          <maml:para>Show only Available Message Resolutions.</maml:para>
-        </maml:description>
-      </command:inputType>
-      <command:inputType>
-        <dev:type>
           <maml:name>SharedJMC.JMCConnection</maml:name>
           <maml:uri />
         </dev:type>
@@ -21812,14 +21777,6 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
     <command:examples>
       <command:example>
         <maml:title>----------  EXAMPLE 1  ----------</maml:title>
-        <dev:code>PS C:\&gt;Get-SGMessageResolution -ABA 123456789 -Environment PROD -Available</dev:code>
-        <dev:remarks>
-          <maml:para>This gets all the available messages to set in ServiceGateway.</maml:para>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>----------  EXAMPLE 2  ----------</maml:title>
         <dev:code>PS C:\&gt;Get-SGMessageResolution -ABA 123456789 -Environment PROD</dev:code>
         <dev:remarks>
           <maml:para>This gets all the existing messages that are set in ServiceGateway.</maml:para>
@@ -26704,9 +26661,9 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
           <maml:description>
             <maml:para>(Optional) UseSSL for the provider.</maml:para>
           </maml:description>
-          <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+          <command:parameterValue required="true">bool</command:parameterValue>
           <dev:type>
-            <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+            <maml:name>System.Boolean</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
@@ -26806,9 +26763,9 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
         <maml:description>
           <maml:para>(Optional) UseSSL for the provider.</maml:para>
         </maml:description>
-        <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+        <command:parameterValue required="true">bool</command:parameterValue>
         <dev:type>
-          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:name>System.Boolean</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
@@ -26918,7 +26875,7 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
       </command:inputType>
       <command:inputType>
         <dev:type>
-          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:name>System.Boolean</maml:name>
           <maml:uri />
         </dev:type>
         <maml:description>
@@ -37297,9 +37254,9 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
           <maml:description>
             <maml:para>Forward To Another ServiceGateway</maml:para>
           </maml:description>
-          <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+          <command:parameterValue required="true">bool</command:parameterValue>
           <dev:type>
-            <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+            <maml:name>System.Boolean</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
@@ -37461,9 +37418,9 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
         <maml:description>
           <maml:para>Forward To Another ServiceGateway</maml:para>
         </maml:description>
-        <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+        <command:parameterValue required="true">bool</command:parameterValue>
         <dev:type>
-          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:name>System.Boolean</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
@@ -37577,7 +37534,7 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
       </command:inputType>
       <command:inputType>
         <dev:type>
-          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:name>System.Boolean</maml:name>
           <maml:uri />
         </dev:type>
         <maml:description>
@@ -37757,9 +37714,9 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
           <maml:description>
             <maml:para>Forward To Another ServiceGateway</maml:para>
           </maml:description>
-          <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+          <command:parameterValue required="true">bool</command:parameterValue>
           <dev:type>
-            <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+            <maml:name>System.Boolean</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
@@ -37909,9 +37866,9 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
         <maml:description>
           <maml:para>Forward To Another ServiceGateway</maml:para>
         </maml:description>
-        <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+        <command:parameterValue required="true">bool</command:parameterValue>
         <dev:type>
-          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:name>System.Boolean</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
@@ -38016,7 +37973,7 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
       </command:inputType>
       <command:inputType>
         <dev:type>
-          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:name>System.Boolean</maml:name>
           <maml:uri />
         </dev:type>
         <maml:description>
@@ -38236,9 +38193,9 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
           <maml:description>
             <maml:para>(Optional) UseSSL of the provider.</maml:para>
           </maml:description>
-          <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+          <command:parameterValue required="true">bool</command:parameterValue>
           <dev:type>
-            <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+            <maml:name>System.Boolean</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
@@ -38363,9 +38320,9 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
         <maml:description>
           <maml:para>(Optional) UseSSL of the provider.</maml:para>
         </maml:description>
-        <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+        <command:parameterValue required="true">bool</command:parameterValue>
         <dev:type>
-          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:name>System.Boolean</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
@@ -38468,7 +38425,7 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
       </command:inputType>
       <command:inputType>
         <dev:type>
-          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:name>System.Boolean</maml:name>
           <maml:uri />
         </dev:type>
         <maml:description>
@@ -41040,9 +40997,9 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
           <maml:description>
             <maml:para>(Optional) UseSSL of the provider.</maml:para>
           </maml:description>
-          <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+          <command:parameterValue required="true">bool</command:parameterValue>
           <dev:type>
-            <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+            <maml:name>System.Boolean</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
@@ -41167,9 +41124,9 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
         <maml:description>
           <maml:para>(Optional) UseSSL of the provider.</maml:para>
         </maml:description>
-        <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+        <command:parameterValue required="true">bool</command:parameterValue>
         <dev:type>
-          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:name>System.Boolean</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
@@ -41272,7 +41229,7 @@ PS C:\&gt; Test-AdfsRP -Username "user@domain.com" -Password "PASSWORD" -AdfsFQD
       </command:inputType>
       <command:inputType>
         <dev:type>
-          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:name>System.Boolean</maml:name>
           <maml:uri />
         </dev:type>
         <maml:description>
