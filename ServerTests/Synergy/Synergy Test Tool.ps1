@@ -16,6 +16,7 @@ add-type @"
 
 $ErrorActionPreference = "Continue"
 
+Import-module PowerShellWSTT
 Import-Module PowershellJMC
 
 
@@ -28,7 +29,7 @@ $Form.Icon                       = ([System.Drawing.Icon]$this.Icon)
 
 $PSUsername                        = New-Object system.Windows.Forms.TextBox
 $PSUsername.Name                   = "PSUsername"
-$PSUsername.text                   = "EWF-ToJXServices@dev.jha"
+$PSUsername.text                   = ""
 $PSUsername.multiline              = $false
 $PSUsername.width                  = 160
 $PSUsername.height                 = 20
@@ -37,7 +38,7 @@ $PSUsername.Font                   = New-Object System.Drawing.Font('Microsoft S
 
 $PSPassBox                         = New-Object system.Windows.Forms.TextBox
 $PSPassBox.Name                    = "PSPassbox"
-$PSPassBox.Text                    = "tr3R7fMrP5"
+$PSPassBox.Text                    = ""
 $PSPassBox.PasswordChar            = "*"
 $PSPassBox.multiline               = $false
 $PSPassBox.width                   = 160
@@ -47,7 +48,7 @@ $PSPassBox.Font                    = New-Object System.Drawing.Font('Microsoft S
 
 $EAUsername                        = New-Object system.Windows.Forms.TextBox
 $EAUsername.name                   = "EAUsername"
-$EAUsername.text                   = "awilletdev@dev.jha"
+$EAUsername.text                   = ""
 $EAUsername.multiline              = $false
 $EAUsername.width                  = 160
 $EAUsername.height                 = 20
@@ -56,7 +57,7 @@ $EAUsername.Font                   = New-Object System.Drawing.Font('Microsoft S
 
 $EAPassBox                         = New-Object system.Windows.Forms.TextBox
 $EAPassBox.name                    = "eapassbox"
-$EAPassBox.Text                    = "J@Nadmin1976"
+$EAPassBox.Text                    = ""
 $EAPassBox.PasswordChar            = "*"
 $EAPassBox.multiline               = $false
 $EAPassBox.width                   = 160
@@ -66,7 +67,7 @@ $EAPassBox.Font                    = New-Object System.Drawing.Font('Microsoft S
 
 $Username                        = New-Object system.Windows.Forms.TextBox
 $Username.Name                   = "username"
-$Username.text                   = "EWF-ToJXServices@dev.jha"
+$Username.text                   = ""
 $Username.multiline              = $false
 $Username.width                  = 160
 $Username.height                 = 20
@@ -75,7 +76,7 @@ $Username.Font                   = New-Object System.Drawing.Font('Microsoft San
 
 $PassBox                         = New-Object system.Windows.Forms.TextBox
 $PassBox.name                    = "passbox"
-$PassBox.Text                    = "tr3R7fMrP5"
+$PassBox.Text                    = ""
 $PassBox.PasswordChar            = "*"
 $PassBox.multiline               = $false
 $PassBox.width                   = 160
@@ -86,7 +87,7 @@ $PassBox.Font                    = New-Object System.Drawing.Font('Microsoft San
 $JxBox                           = New-Object system.Windows.Forms.TextBox
 $jxbox.Name                      = "jxbox"
 $JxBox.multiline                 = $false
-$JxBox.text                      = "jxchange.gadev.jha-sys.com"
+$JxBox.text                      = "jxchange.citystate.name.jha-sys.com"
 $JxBox.width                     = 160
 $JxBox.height                    = 20
 $JxBox.location                  = New-Object System.Drawing.Point(151,250)
@@ -103,7 +104,7 @@ $EnvBox.Font                     = New-Object System.Drawing.Font('Microsoft San
 
 $AbaBox                          = New-Object system.Windows.Forms.TextBox
 $AbaBox.name                     = "ababox"
-$AbaBox.Text                     = "222000777"
+$AbaBox.Text                     = "123456789"
 $AbaBox.multiline                = $false
 $AbaBox.width                    = 114
 $AbaBox.height                   = 20
@@ -210,7 +211,7 @@ $DataGridView1.Scrollbars        = "Vertical"
 
 if($selected){Remove-Variable selected}
 
-$Form.controls.AddRange(@($Username,$PassBox,$PSUsername,$PSPassBox,$EAUsername,$EAPassBox,$UserLabel,$PassLabel,$PSUserLabel,$PSPassLabel,$EAUserLabel,$EAPassLabel,$JxBox,$EnvBox,$AbaBox,$ListButton,$ProviderComboBox,$DataGridView1,$AbaLabel,$EnvironmentLabel,$JxLabel))
+$Form.controls.AddRange(@($PSUsername,$PSPassBox,$EAUsername,$EAPassBox,$Username,$PassBox,$JxBox,$EnvBox,$AbaBox,$ProviderComboBox,$ListButton,$UserLabel,$PassLabel,$PSUserLabel,$PSPassLabel,$EAUserLabel,$EAPassLabel,$DataGridView1,$AbaLabel,$EnvironmentLabel,$JxLabel))
 $ProviderComboBox.items.Add("Choose a test")
 $ProviderComboBox.Items.add("Synergy Server Tests")
 $ProviderComboBox.Items.add("Synergy-to-SG")
@@ -262,6 +263,20 @@ $ababox.add_mousehover($ShowHelp)
 
 $ListButton.Add_Click({ Invoke-Test })
 #$DataGridView1.font = "Lucida Console"
+function Invoke-IEFirstRunCheck {
+    Try {
+        $property = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Internet Explorer\Main"
+        $flag = $property.DisableFirstRunCustomize
+        if ($flag -ne 2) {
+            Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Internet Explorer\Main" -Name "DisableFirstRunCustomize" -Value 2
+            #Write-Host "Disabled IE First Run Check"
+        }
+        else {
+            #Write-Host "Flag already set correctly"
+        }
+    }
+    Catch {Add-Text -string "Error setting IE First Run"}
+}
 function Invoke-Test {
     switch ($selected) {
         "Choose a test"  {$DataGridView1.Text = "Please select a test from the dropdown menu"; break}
@@ -452,7 +467,7 @@ function Test-PS {
     [Parameter (Mandatory = $false)] [String]$user,
     [Parameter (Mandatory = $false)] [String]$pass
     )
-
+    Invoke-IEFirstRunCheck
     Try{
         $dnsTest = Resolve-DnsName $jxbox.text -NoHostsFile -DnsOnly
     }
@@ -535,7 +550,7 @@ function Test-EA {
     [Parameter (Mandatory = $false)] [String]$user,
     [Parameter (Mandatory = $false)] [String]$pass
     )
-
+    Invoke-IEFirstRunCheck
     Try{
         $dnsTest = Resolve-DnsName $jxbox.text -NoHostsFile -DnsOnly
     }
@@ -621,23 +636,23 @@ function Test-SG {
     [Parameter (Mandatory = $false)] [String]$ABA,
     [Parameter (Mandatory = $false)] [String]$ENV
     )
-
+    Invoke-IEFirstRunCheck
     Try{
-        $dnsTest = Resolve-DnsName $jxbox.text -NoHostsFile -DnsOnly
+        $dnsTest = Resolve-DnsName $jXchangeFarm -NoHostsFile -DnsOnly
     }
     Catch{
         $dnsTest = $false
-        Add-Text -string "DNS failure for $($jxbox.text). Is this the right URL?" -color "red"
+        Add-Text -string "DNS failure for $($jXchangeFarm). Is this the right URL?" -color "red"
     }
     if ($dnsTest -notLike $false){
         Try {
-            $jxTlsCheck = Test-TLSConnection -ComputerName $($jxbox.text)
+            $jxTlsCheck = Test-TLSConnection -ComputerName $($jXchangeFarm)
             $jxCheck = $true
             Add-line
         }
         Catch {
             $jxCheck = $false
-            Add-Text -string "Error establishing TLS session with https://$($jxbox.text)" -color "red"
+            Add-Text -string "Error establishing TLS session with https://$($jXchangeFarm)" -color "red"
             Add-line
         }
     }
@@ -673,7 +688,7 @@ function Test-SG {
                 }
             }
         else {
-            Add-Text -string "I'm having trouble auto-validating the credential for $($username.text). You may need to verify this manually" -color "red"
+            Add-Text -string "I'm having trouble auto-validating the credential for $($user). You may need to verify this manually" -color "red"
             Add-Line
         }
     }
@@ -683,54 +698,42 @@ function Test-SG {
     Add-Line
         
     $errvar = ''
-    $message = ''
     $fullError = ''
-
-    #$password = ConvertTo-SecureString $pass -AsPlainText -Force
-    $userString = $user
-    
 
     $SGABA = $aba
     $SGEnv = $env
-    $SGFarm = $jXchangeFarm
     
-    $uri = "https://" + $SGfarm + "/jXchange/2008/ServiceGateway/ServiceGateway.svc"
-    $headers = @{
-        'SOAPAction' = 'http://jackhenry.com/ws/PingAll'
-    }
-    $timestamp = Get-Date -UFormat '+%Y-%m-%dT%H:%M:%S.000Z'
+    $password = ConvertTo-SecureString -String $pass -AsPlainText -Force
+    $connection = New-ServiceConnection -UserName $user -Password $password -ServerName $jXchangeFarm
     
-$soap = @"
-    <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-              <SOAP-ENV:Header>
-                        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
-                                  <wsse:UsernameToken>
-                                  <wsse:Username>$userString</wsse:Username>
-                                  <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">$pass</wsse:Password>
-                                  </wsse:UsernameToken>
-                        </wsse:Security>
-              </SOAP-ENV:Header>
-              <SOAP-ENV:Body>
-              <PingAll xmlns="http://jackhenry.com/jxchange/TPG/2008">
-                <PingRq>Ping</PingRq>
-                <InstRtId>$SGABA</InstRtId>
-                <InstEnv>$SGEnv</InstEnv>
-                <IncNonProdEnv>true</IncNonProdEnv>
-                </PingAll>
-        </SOAP-ENV:Body>
-    </SOAP-ENV:Envelope>
+[xml]$soap = @"
+        <PingAll xmlns="http://jackhenry.com/jxchange/TPG/2008">
+        <PingRq>Ping</PingRq>
+        <InstRtId>$SGABA</InstRtId>
+        <InstEnv>$SGEnv</InstEnv>
+        <IncNonProdEnv>true</IncNonProdEnv>
+        </PingAll>
+
 "@
     try {
-        [xml]$return = (Invoke-WebRequest -Uri $uri -Headers $headers -Method Post -Body $soap -ContentType text/xml).content
-        $message = ($return.Envelope.body.PingAllResponse.PingAllArray.PingAllInfoRec) | Where-Object {$_.InstEnv -like $SGEnv}
-        #$results = "Successfully retrieved list of Synergy Indexes" + "`r`n" + "Displaying first 20 results" + "`r`n" + "`r`n"
-        $body = $message.SvcPrvdName -join ", " | Out-String
-        #$output = $results + $body
-        Add-Text -string "Success!" -color "green"
-        Add-Text -string "Retrieved list of Providers configured in the Service Gateway for $($sgaba)/$($sgenv) on $jXchangeFarm"
-        Add-line
-        Add-Text -string $body
+        $operation = Get-XmlOperation -XmlString $soap.OuterXml -CleanXml
+        $request = Send-XmlOperation -ServiceConnection $connection -XmlRequest $operation
+        if ($request.HeaderStatusCode -like 200){
+            $response = ($request.Response.PingAllResponse.PingAllArray.PingAllInfoRec.svcprvdname) | out-string
+            Add-Text -string "Success!" -color "green"
+            Add-Text -string "Retrieved list of Providers configured in the Service Gateway for $($sgaba)/$($sgenv) on $jXchangeFarm"
+            Add-line
+            Add-Text -string $response
         }
+        else {
+            $response = ($request.response.fault.faultstring.'#text') | out-string
+            Add-Text -string "Error!" -color "red"
+            Add-Text -string "Could not retrieve list of Synergy Indexes"
+            Add-line
+            Add-Text -string "Error Reason:"
+            Add-Text -string $response
+        }
+    }
     catch [System.ArgumentException] {
         $errvar = $_.Exception.Message
         Add-text -string "Unhandled Expception: System.ArgumentException" -color "red"
@@ -764,7 +767,7 @@ function Test-SynNode {
     [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
     #[System.Net.ServicePointManager]::ServerCertificateValidationCallback = $true
     $errvar = ''
-    
+    Invoke-IEFirstRunCheck
     $ipv6 = Get-ItemPropertyValue 'HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters' -Name "DisabledComponents" -ErrorAction SilentlyContinue
     
     Add-Text -string "Checking IPv6 Settings"
@@ -956,7 +959,7 @@ function Test-SynNode {
             $signingName = "ADFS-Signing-" + $suffix
             $uri = "federationmetadata/2007-06/federationmetadata.xml"
             $fullUrl = "https://$adfsFarmUrl/$uri"
-            $response = Invoke-WebRequest -Uri $fullUrl -UseBasicParsing
+            $response = Invoke-WebRequest -Uri $fullUrl
             $xmlContent = [xml]$response.content
             $certificateString = $xmlContent."EntityDescriptor"."Signature"."KeyInfo"."X509Data"."X509Certificate"
             $file = New-Temporaryfile
@@ -995,22 +998,23 @@ function Test-PubWorkflowSrch{
     [Parameter (Mandatory = $false)] [String]$ABA,
     [Parameter (Mandatory = $false)] [String]$ENV
     )
+    Invoke-IEFirstRunCheck
     Try{
-        $dnsTest = Resolve-DnsName $jxbox.text -NoHostsFile -DnsOnly
+        $dnsTest = Resolve-DnsName $jXchangeFarm -NoHostsFile -DnsOnly
     }
     Catch{
         $dnsTest = $false
-        Add-Text -string "DNS failure for $($jxbox.text). Is this the right URL?" -color "red"
+        Add-Text -string "DNS failure for $($jXchangeFarm). Is this the right URL?" -color "red"
     }
     if ($dnsTest -notLike $false){
         Try {
-            $jxTlsCheck = Test-TLSConnection -ComputerName $($jxbox.text)
+            $jxTlsCheck = Test-TLSConnection -ComputerName $($jXchangeFarm)
             $jxCheck = $true
             Add-line
         }
         Catch {
             $jxCheck = $false
-            Add-Text -string "Error establishing TLS session with https://$($jxbox.text)" -color "red"
+            Add-Text -string "Error establishing TLS session with https://$($jXchangeFarm)" -color "red"
             Add-line
         }
     }
@@ -1047,7 +1051,7 @@ function Test-PubWorkflowSrch{
                 }
             }
         else {
-            Add-Text -string "I'm having trouble auto-validating the credential for $($username.text). You may need to verify this manually" -color "red"
+            Add-Text -string "I'm having trouble auto-validating the credential for $($user). You may need to verify this manually" -color "red"
             Add-Line
         }
     }
@@ -1055,62 +1059,48 @@ function Test-PubWorkflowSrch{
     if (($jxCheck -notlike $false) -and ($credCheck -notlike $false)){
     Add-Text -string "Attempting to retrieve a list of published workflows from EWF"
     $errvar = ''
-    $message = ''
     $fullError = ''
-
-    #$password = ConvertTo-SecureString $pass -AsPlainText -Force
-    $userString = $user
-    
 
     $SGABA = $aba
     $SGEnv = $env
-    $SGFarm = $jXchangeFarm
+
+    $password = ConvertTo-SecureString -String $pass -AsPlainText -Force
+    $connection = New-ServiceConnection -UserName $user -Password $password -ServerName $jXchangeFarm
     
-    $uri = "https://" + $SGfarm + "/jXchange/2008/ServiceGateway/ServiceGateway.svc"
-    $headers = @{
-        'SOAPAction' = 'http://jackhenry.com/ws/PubWorkflowSrch'
-    }
-    $timestamp = Get-Date -UFormat '+%Y-%m-%dT%H:%M:%S.000Z'
-    
-    $soap = @"
-    <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-              <SOAP-ENV:Header>
-                        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
-                                  <wsse:UsernameToken>
-                                            <wsse:Username>$userString</wsse:Username>
-                                            <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">$pass</wsse:Password>
-                                  </wsse:UsernameToken>
-                        </wsse:Security>
-              </SOAP-ENV:Header>
-              <SOAP-ENV:Body>
-                        <PubWorkflowSrch xmlns="http://jackhenry.com/jxchange/TPG/2008">
-                                  <SrchMsgRqHdr>
-                                            <jXchangeHdr>
-                                                      <JxVer>2019.0.04.01</JxVer>
-                                                      <AuditUsrId>AuditUsrId1</AuditUsrId>
-                                                      <AuditWsId>AuditWsId1</AuditWsId>
-                                                      <InstRtId>$SGABA</InstRtId>
-                                                      <InstEnv>$SGEnv</InstEnv>
-                                            </jXchangeHdr>
-                                            <MaxRec>20</MaxRec>
-                                  </SrchMsgRqHdr>
-                        </PubWorkflowSrch>
-              </SOAP-ENV:Body>
-    </SOAP-ENV:Envelope>
+[xml]$soap = @"
+    <PubWorkflowSrch xmlns="http://jackhenry.com/jxchange/TPG/2008">
+                <SrchMsgRqHdr>
+                        <jXchangeHdr>
+                                    <JxVer>2019.0.04.01</JxVer>
+                                    <AuditUsrId>AuditUsrId1</AuditUsrId>
+                                    <AuditWsId>AuditWsId1</AuditWsId>
+                                    <InstRtId>$SGABA</InstRtId>
+                                    <InstEnv>$SGEnv</InstEnv>
+                        </jXchangeHdr>
+                        <MaxRec>20</MaxRec>
+                </SrchMsgRqHdr>
+    </PubWorkflowSrch>
 "@
     try {
-        [xml]$return = (Invoke-WebRequest -Uri $uri -Headers $headers -Method Post -Body $soap -ContentType text/xml).content
-        $message = ($return.Envelope.Body.PubWorkflowSrchResponse.PubWorkflowSrchRecArray.PubWorkflowSrchRec).workflowname 
-        #$results = "Successfully retrieved list of published workflow definitions" + "`r`n" + "Displaying first 20 results" + "`r`n" + "`r`n"
-        $body = $message -join "`r`n" | Out-String
-        #$output = $results + $body
-        Add-Text -string "Success!" -color "green"
-        Add-Text -string "Retrieved list of published definitions from EWF"
-        add-line
-        Add-Text -string "Displaying up to 20 results"
-        Add-line
-        Add-Text -string $body
+        $operation = Get-XmlOperation -XmlString $soap.OuterXml -CleanXml
+        $request = Send-XmlOperation -ServiceConnection $connection -XmlRequest $operation
+        if ($request.HeaderStatusCode -like 200){
+            $response = ($request.Response.PubWorkflowSrchResponse.PubWorkflowSrchRecArray.PubWorkflowSrchRec.workflowname) | out-string
+            Add-Text -string "Success!" -color "green"
+            Add-Text -string "Retrieved list of published definitions from EWF"
+            Add-Text -string "Displaying up to 20 results"
+            Add-line
+            Add-Text -string $response
         }
+        else {
+            $response = ($request.response.fault.faultstring.'#text') | out-string
+            Add-Text -string "Error!" -color "red"
+            Add-Text -string "Could not retrieve list of Synergy Indexes"
+            Add-line
+            Add-Text -string "Error Reason:"
+            Add-Text -string $response
+        }
+    }
     catch [System.ArgumentException] {
         $errvar = $_.Exception.Message
         Add-text -string "Unhandled Expception: System.ArgumentException" -color "red"
@@ -1150,7 +1140,7 @@ function Test-SvcDictSrch{
     [Parameter (Mandatory = $false)] [String]$ABA,
     [Parameter (Mandatory = $false)] [String]$ENV
     )
-    
+    Invoke-IEFirstRunCheck
     Try{
         $dnsTest = Resolve-DnsName $jxbox.text -NoHostsFile -DnsOnly
     }
@@ -1210,63 +1200,52 @@ function Test-SvcDictSrch{
     if (($jxCheck -notlike $false) -and ($credCheck -notlike $false)){
     Add-Text -string "Attempting to retrieve list of indexes from Synergy"
     $errvar = ''
-    $message = ''
     $fullError = ''
-
-    #$password = ConvertTo-SecureString $pass -AsPlainText -Force
-    $userString = $user
-    
+   
 
     $SGABA = $aba
     $SGEnv = $env
-    $SGFarm = $jXchangeFarm
     
-    $uri = "https://" + $SGfarm + "/jXchange/2008/ServiceGateway/ServiceGateway.svc"
-    $headers = @{
-        'SOAPAction' = 'http://jackhenry.com/ws/SvcDictSrch'
-    }
-    $timestamp = Get-Date -UFormat '+%Y-%m-%dT%H:%M:%S.000Z'
+    $password = ConvertTo-SecureString -String $pass -AsPlainText -Force
+    $connection = New-ServiceConnection -UserName $user -Password $password -ServerName $jXchangeFarm
     
-$soap = @"
-    <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-              <SOAP-ENV:Header>
-                        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
-                                  <wsse:UsernameToken>
-                                  <wsse:Username>$userString</wsse:Username>
-                                  <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">$pass</wsse:Password>
-                                  </wsse:UsernameToken>
-                        </wsse:Security>
-              </SOAP-ENV:Header>
-              <SOAP-ENV:Body>
-                        <SvcDictSrch xmlns="http://jackhenry.com/jxchange/TPG/2008">
-                                  <SrchMsgRqHdr>
-                                            <jXchangeHdr>
-                                                      <JxVer>2019.0.04.01</JxVer>
-                                                      <AuditUsrId>jXsupport</AuditUsrId>
-                                                      <AuditWsId>TestTool</AuditWsId>
-                                                      <InstRtId>$SGABA</InstRtId>
-                                                      <InstEnv>$SGEnv</InstEnv>
-                                            </jXchangeHdr>
-                                            <MaxRec>20</MaxRec>
-                                  </SrchMsgRqHdr>
-                                  <SvcDictName>DocImgAdd</SvcDictName>
-                                  <SvcDictType>Rq</SvcDictType>
-            </SvcDictSrch>
-        </SOAP-ENV:Body>
-    </SOAP-ENV:Envelope>
+[xml]$soap = @"
+<SvcDictSrch xmlns="http://jackhenry.com/jxchange/TPG/2008">
+    <SrchMsgRqHdr>
+        <jXchangeHdr>
+            <JxVer>2019.0.04.01</JxVer>
+            <AuditUsrId>jXsupport</AuditUsrId>
+            <AuditWsId>TestTool</AuditWsId>
+            <InstRtId>$SGABA</InstRtId>
+            <InstEnv>$SGEnv</InstEnv>
+        </jXchangeHdr>
+        <MaxRec>20</MaxRec>
+    </SrchMsgRqHdr>
+    <SvcDictName>DocImgAdd</SvcDictName>
+    <SvcDictType>Rq</SvcDictType>
+</SvcDictSrch>
 "@
+    
     try {
-        [xml]$return = (Invoke-WebRequest -Uri $uri -Headers $headers -Method Post -Body $soap -ContentType text/xml).content
-        $message = ($return.Envelope.Body.SvcDictSrchResponse.SvcDictInfoArray.SvcDictInfoRec).ElemName 
-        #$results = "Successfully retrieved list of Synergy Indexes" + "`r`n" + "Displaying first 20 results" + "`r`n" + "`r`n"
-        $body = $message -join "`r`n" | Out-String
-        #$output = $results + $body
-        Add-Text -string "Success!" -color "green"
-        Add-Text -string "Retrieved list of Synergy Indexes"
-        Add-Text -string "Displaying up to 20 results"
-        Add-line
-        Add-Text -string $body
+        $operation = Get-XmlOperation -XmlString $soap.OuterXml -CleanXml
+        $request = Send-XmlOperation -ServiceConnection $connection -XmlRequest $operation
+        if ($request.HeaderStatusCode -like 200){
+            $response = ($request.Response.SvcDictSrchResponse.SvcDictInfoArray.SvcDictInfoRec.elemname) | out-string
+            Add-Text -string "Success!" -color "green"
+            Add-Text -string "Retrieved list of Synergy Indexes"
+            Add-Text -string "Displaying up to 20 results"
+            Add-line
+            Add-Text -string $response
         }
+        else {
+            $response = ($request.response.fault.faultstring.'#text') | out-string
+            Add-Text -string "Error!" -color "red"
+            Add-Text -string "Could not retrieve list of Synergy Indexes"
+            Add-line
+            Add-Text -string "Error Reason:"
+            Add-Text -string $response
+        }
+    }
     catch [System.ArgumentException] {
         $errvar = $_.Exception.Message
         Add-text -string "Unhandled Expception: System.ArgumentException" -color "red"
@@ -1305,80 +1284,5 @@ $soap = @"
 $DataGridView1.text = "Please select a test"
 #$Username.text = whoami /upn
 #endregion
-
+$Form.Icon = New-Object -TypeName System.Drawing.Icon -ArgumentList @(New-Object -TypeName  System.IO.MemoryStream -ArgumentList @(,[System.Convert]::FromBase64String('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Bv9fGAb/XxgG/18YBv9fGAb9XxgGi18YBgZfGAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXxgG8V8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG8l8YBklfGAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXxgG818YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBq5fGAYIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXxgGbV8YBn5fGAabXxgG0F8YBvxfGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBupfGAYtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXxgGAF8YBgBfGAYAXxgGGV8YBpNfGAb8XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv1fGAZfXxgGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF8YBgBfGAYAXxgGAF8YBh9fGAbdXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAaIXxgGAAAAAAAAAAAAXxgGAF8YBgBfGAYAXxgGAF8YBgBfGAYAXxgGAF8YBgBfGAYAXxgGAF8YBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAYAXxgGAF8YBgBfGAYAXxgGAF8YBgBfGAYAXxgGAF8YBgBfGAYAAAAAAAAAAAAAAAAAAAAAAF8YBghfGAa+XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAaiXxgGAQAAAAAAAAAAXxgGBF8YBgtfGAYLXxgGC18YBgtfGAYLXxgGC18YBgtfGAYLXxgGCl8YBgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAYGXxgGC18YBgtfGAYLXxgGC18YBgtfGAYLXxgGC18YBgtfGAYLAAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAawXxgGBAAAAAAAAAAAXxgGSF8YBsNfGAbDXxgGw18YBsNfGAbDXxgGw18YBsNfGAbDXxgGtV8YBiMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAZmXxgGw18YBsNfGAbDXxgGw18YBsNfGAbDXxgGw18YBsNfGAbBAAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGYF8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG8F8YBi8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAaIXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG7F8YBi4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAaGXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb8AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG7F8YBi4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAaGXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb8AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG7F8YBi4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAaGXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb8AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG7F8YBi4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAaGXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb8AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG7F8YBi4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAaGXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb8AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG7F8YBi4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAaGXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb8AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG7F8YBi4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAaGXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb8AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG7F8YBi4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAaGXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb8AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG7F8YBi4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAaGXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb8AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG7F8YBi4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAaGXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb8AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG7F8YBi4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF8YBgBfGAaGXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb8AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG7F8YBi4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF8YBgBfGAaTXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb8AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG7F8YBixfGAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXxgGAF8YBglfGAa7XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb4AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG918YBmxfGAYEXxgGAF8YBgBfGAYAAAAAAF8YBgBfGAYAXxgGAF8YBkNfGAbvXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAbpAAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBvJfGAaMXxgGIl8YBgBfGAYAXxgGAF8YBgBfGAYBXxgGNl8YBspfGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAbHAAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG2F8YBpBfGAZcXxgGT18YBmBfGAaXXxgG418YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv5fGAaJAAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb+XxgG+18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBupfGAY6AAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBpxfGAYGAAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAa0XxgGBQAAAAAAAAAAXxgGXl8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG2V8YBipfGAYAAAAAAAAAAAAAAAAAAAAAAF8YBgZfGAa2XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18Y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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAbsXxgG/18YBv9fGAb/XxgG/18YBv9fGAb+XxgG9F8YBtlfGAaoXxgGYF8YBh1fGAYAXxgGAF8YBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXxgG7F8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv1fGAbWXxgGfF8YBh1fGAYAXxgGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF8YBuxfGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAbNXxgGTl8YBgJfGAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAbsXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBu1fGAZsXxgGBF8YBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXxgG7F8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG8l8YBmRfGAYBXxgGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF8YBuxfGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAblXxgGOV8YBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAbsXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBq9fGAYLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXxgG7l8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb0XxgGR18YBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF8YBsRfGAbZXxgG5V8YBvRfGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBppfGAYCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAYTXxgGGV8YBiRfGAY/XxgGel8YBtZfGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAbVXxgGGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXxgGAF8YBgBfGAYAXxgGAF8YBgBfGAYrXxgGzV8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG818YBjwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAYAXxgGAF8YBmRfGAb8XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv5fGAZhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF8YBgBfGAYwXxgG7V8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgGfgAAAAAAAAAAAAAAAAAAAABfGAYAXxgGAF8YBgBfGAYAXxgGAF8YBgBfGAYAXxgGAF8YBgBfGAYAXxgGAF8YBgBfGAYAXxgGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF8YBgBfGAYAXxgGAF8YBgBfGAYAXxgGAF8YBgBfGAYAXxgGAF8YBgBfGAYAXxgGAF8YBgBfGAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXxgGIV8YBuJfGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBpJfGAYAAAAAAAAAAAAAAAAAXxgGCV8YBipfGAYsXxgGLF8YBixfGAYsXxgGLF8YBixfGAYsXxgGLF8YBixfGAYsXxgGLF8YBhUAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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Bv9fGAaiXxgGAQAAAAAAAAAAAAAAAF8YBjRfGAbwXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgGtF8YBgsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfGAYfXxgG4F8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgGol8YBgEAAAAAAAAAAAAAAABfGAY0XxgG8F8YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG9l8YBlNfGAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXxgGH18YBuBfGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBqJfGAYBAAAAAAAAAAAAAAAAXxgGNF8YBvBfGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBqhfGAYKXxgGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF8YBh9fGAbgXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAaiXxgGAQAAAAAAAAAAAAAAAF8YBjRfGAbwXxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18YBv9fGAb/XxgG/18Y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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////////wAP////////AAP///////8AAP///////wAAf///////AAA///////8AAD///////wAAH///////AAAf//////8AAA///////wAAD///////+AAP///////8AA////////wAD////////AAPAAP/wAD8AA8AA//AAPwADwAD/8AA/AAHAAP/wAD8AAcAA//AAPwABwAD/8AA/AAHAAP/wAD8AAcAA//AAPwABwAD/8AA/AAHAAP/wAD8AAcAA//AAPwABwAD/8AA/AAHAAP/wAD8AAcAA//AAPwABwAD/8AA/AAHAAP/wAD8AAcAA//AAPwABwAD/8AA/AAHAAP/wAD8AAcAA//AAPwABwAD/8AA/AAHAAH/gAD8AAcAAH8AAPwABwAAAAAA/AAHAAAAAAD8AAcAAAAAAPwABwAAAAAB/AAHAAAAAAH8AAcAAAAAA/wABwAAAAAH/AAHAAAAAA/8AAcAAAAAH/wABwACAAA//AAPAAOAAP////8AA/AP/////wAD/////4B/AAP/////AB8AA/////wADwAD/////AAHAAP////4AAMAA/////gAAwAD////+AADAAP////4AAMAA/////gAAwAD////+AADAAP////4AAcAA/////wABwAD/////gAPAAP/////AD8AA////w==')))
 [void]$Form.ShowDialog()
-# SIG # Begin signature block
-# MIINiQYJKoZIhvcNAQcCoIINejCCDXYCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
-# gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUDGZHzr7tshBZbal2RSbqIakd
-# kiegggrLMIIFMDCCBBigAwIBAgIQBAkYG1/Vu2Z1U0O1b5VQCDANBgkqhkiG9w0B
-# AQsFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
-# VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
-# IElEIFJvb3QgQ0EwHhcNMTMxMDIyMTIwMDAwWhcNMjgxMDIyMTIwMDAwWjByMQsw
-# CQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3d3cu
-# ZGlnaWNlcnQuY29tMTEwLwYDVQQDEyhEaWdpQ2VydCBTSEEyIEFzc3VyZWQgSUQg
-# Q29kZSBTaWduaW5nIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-# +NOzHH8OEa9ndwfTCzFJGc/Q+0WZsTrbRPV/5aid2zLXcep2nQUut4/6kkPApfmJ
-# 1DcZ17aq8JyGpdglrA55KDp+6dFn08b7KSfH03sjlOSRI5aQd4L5oYQjZhJUM1B0
-# sSgmuyRpwsJS8hRniolF1C2ho+mILCCVrhxKhwjfDPXiTWAYvqrEsq5wMWYzcT6s
-# cKKrzn/pfMuSoeU7MRzP6vIK5Fe7SrXpdOYr/mzLfnQ5Ng2Q7+S1TqSp6moKq4Tz
-# rGdOtcT3jNEgJSPrCGQ+UpbB8g8S9MWOD8Gi6CxR93O8vYWxYoNzQYIH5DiLanMg
-# 0A9kczyen6Yzqf0Z3yWT0QIDAQABo4IBzTCCAckwEgYDVR0TAQH/BAgwBgEB/wIB
-# ADAOBgNVHQ8BAf8EBAMCAYYwEwYDVR0lBAwwCgYIKwYBBQUHAwMweQYIKwYBBQUH
-# AQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYI
-# KwYBBQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFz
-# c3VyZWRJRFJvb3RDQS5jcnQwgYEGA1UdHwR6MHgwOqA4oDaGNGh0dHA6Ly9jcmw0
-# LmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RDQS5jcmwwOqA4oDaG
-# NGh0dHA6Ly9jcmwzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-# QS5jcmwwTwYDVR0gBEgwRjA4BgpghkgBhv1sAAIEMCowKAYIKwYBBQUHAgEWHGh0
-# dHBzOi8vd3d3LmRpZ2ljZXJ0LmNvbS9DUFMwCgYIYIZIAYb9bAMwHQYDVR0OBBYE
-# FFrEuXsqCqOl6nEDwGD5LfZldQ5YMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-# IZ3zbcgPMA0GCSqGSIb3DQEBCwUAA4IBAQA+7A1aJLPzItEVyCx8JSl2qB1dHC06
-# GsTvMGHXfgtg/cM9D8Svi/3vKt8gVTew4fbRknUPUbRupY5a4l4kgU4QpO4/cY5j
-# DhNLrddfRHnzNhQGivecRk5c/5CxGwcOkRX7uq+1UcKNJK4kxscnKqEpKBo6cSgC
-# PC6Ro8AlEeKcFEehemhor5unXCBc2XGxDI+7qPjFEmifz0DLQESlE/DmZAwlCEIy
-# sjaKJAL+L3J+HNdJRZboWR3p+nRka7LrZkPas7CM1ekN3fYBIM6ZMWM9CBoYs4Gb
-# T8aTEAb8B4H6i9r5gkn3Ym6hU/oSlBiFLpKR6mhsRDKyZqHnGKSaZFHvMIIFkzCC
-# BHugAwIBAgIQDOvNDFiXw2OZ9AIQGE5NKjANBgkqhkiG9w0BAQsFADByMQswCQYD
-# VQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3d3cuZGln
-# aWNlcnQuY29tMTEwLwYDVQQDEyhEaWdpQ2VydCBTSEEyIEFzc3VyZWQgSUQgQ29k
-# ZSBTaWduaW5nIENBMB4XDTIwMDIwNTAwMDAwMFoXDTIzMDIwOTEyMDAwMFowgc8x
-# CzAJBgNVBAYTAlVTMREwDwYDVQQIEwhNaXNzb3VyaTEPMA0GA1UEBxMGTW9uZXR0
-# MSYwJAYDVQQKDB1KQUNLIEhFTlJZICYgQVNTT0NJQVRFUywgSU5DLjEMMAoGA1UE
-# CxMDSkhBMSYwJAYDVQQDDB1KQUNLIEhFTlJZICYgQVNTT0NJQVRFUywgSU5DLjE+
-# MDwGCSqGSIb3DQEJARYvc2NzLWVudGVycHJpc2VhcHBsaWNhdGlvbnNlY3VyaXR5
-# QGphY2toZW5yeS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDR
-# rClZ7TdfrGF+aTUJqbQojlEBoStRJqZe1SebuP3+RSQLVpnDXd2T1BBtBIdxPcGR
-# lSgpGPDJNkmDIFa6utr++4jYPjwZMXP4MAUSHm7JpvLJ/n0eVnLcuV3+FhUoHqrP
-# /cNRxhAaQ7DWdrAG0C9u8fNyIcP3xZ6tgbqTxpF72ImIZ3+VfEzopCMhsx+EeYkN
-# HN6YyGJTce9yjitgkb0Wwb0mmkJZYtseg/JnKZEvW3QR8mJH1WSHxtjm2pD52OGH
-# 6J8ze+eX06hMXdsgjXl81UBnmR0/WUsjFk4iOXbnUCicZmaTQHV8MagzOhlM5m2D
-# lagJPSnEySweXxD27NR5AgMBAAGjggHFMIIBwTAfBgNVHSMEGDAWgBRaxLl7Kgqj
-# pepxA8Bg+S32ZXUOWDAdBgNVHQ4EFgQUA6XmHgDE2Xp3ln6R4tXl4wp/+PswDgYD
-# VR0PAQH/BAQDAgeAMBMGA1UdJQQMMAoGCCsGAQUFBwMDMHcGA1UdHwRwMG4wNaAz
-# oDGGL2h0dHA6Ly9jcmwzLmRpZ2ljZXJ0LmNvbS9zaGEyLWFzc3VyZWQtY3MtZzEu
-# Y3JsMDWgM6Axhi9odHRwOi8vY3JsNC5kaWdpY2VydC5jb20vc2hhMi1hc3N1cmVk
-# LWNzLWcxLmNybDBMBgNVHSAERTBDMDcGCWCGSAGG/WwDATAqMCgGCCsGAQUFBwIB
-# FhxodHRwczovL3d3dy5kaWdpY2VydC5jb20vQ1BTMAgGBmeBDAEEATCBhAYIKwYB
-# BQUHAQEEeDB2MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20w
-# TgYIKwYBBQUHMAKGQmh0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2Vy
-# dFNIQTJBc3N1cmVkSURDb2RlU2lnbmluZ0NBLmNydDAMBgNVHRMBAf8EAjAAMA0G
-# CSqGSIb3DQEBCwUAA4IBAQCsaoC+laoa0qHEpl+beeLTTktTEFavWjDGs7QhvU8Q
-# ABBL1bz0RQUG9KuCcfr0XQTMB3NuPHTr3fwq/pNKJIMn3tfRzv+jfkdFirla2NWP
-# +wr+V7+J43utL10wo50TceBzUXTm3gAE0dbRFSveQVapBqS44bQ8O6g6x0HyNAEL
-# MIZLWtskxXuBKoi7VuqG1yoz/hUtnBPd7uFrK6vyMHc285CVntJN+sY5sBNw5jDq
-# JnzYi/SINS1ZQSgXq8aC1Xm1VRPQ8wTQuHUgyRFchtVYBl0Lmp+A8wh9ZGW36pHY
-# XtOEMUgQkb/FAx+2cMSWOD5GlS672n24sPfDCCOjg4s5MYICKDCCAiQCAQEwgYYw
-# cjELMAkGA1UEBhMCVVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcGA1UECxMQ
-# d3d3LmRpZ2ljZXJ0LmNvbTExMC8GA1UEAxMoRGlnaUNlcnQgU0hBMiBBc3N1cmVk
-# IElEIENvZGUgU2lnbmluZyBDQQIQDOvNDFiXw2OZ9AIQGE5NKjAJBgUrDgMCGgUA
-# oHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYB
-# BAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0B
-# CQQxFgQUEzblbNifCYJTVIbQjHXiQ0sM0OMwDQYJKoZIhvcNAQEBBQAEggEAls9y
-# a7Y+X+EB5lln9nGSpDzCR1i0/COwIWrWqYI+z4MgwFfNsrjWC8RVu8U+EAyAmRh5
-# m40Fe2FMf0OUkr83rAnO8XG0n494tutGePGkVUniNzb0XLvg3MYbKYQXit0zu/Xi
-# ap9J1V1p4AmgSj6vdhayz2WJXCDDh9eaRaBDo+6AoJOBQDW3j2oXC9pcJ83YyqwL
-# jDln6zyE3GehMnQpf7M8F+HoE+vWtia3WyMkqC1fJLO9dT/c0BuIJ+DZx6SZ19vO
-# rdrxZPNIJDxBQSn+ISQZ9t9ajrRvilZ1TFfATU+lzCSrhoTfcJBW8hlmbjTlsI8V
-# pRXqfuzObZy6fSqVSQ==
-# SIG # End signature block
