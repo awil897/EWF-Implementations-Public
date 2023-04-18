@@ -17,7 +17,7 @@
         ProductName = 'Get-SGProviderInformation'
         ProductVersion = '1.0.1'
         Copyright = '2023'
-        RequireElevation = $true
+        RequireElevation = $false
         PackageType = 'Console'
     }
     Bundle = @{
