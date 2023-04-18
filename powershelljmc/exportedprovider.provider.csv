@@ -1,3 +1,0 @@
-#TYPE PowerShellJMC.NewSGProviderCoreDirector
-"Name","Environment","ABA","ProviderName","ProviderDescription","AllEndpoint","AllEndpointUserName","AllEndpointPassword","AllEndpointIssuer","Stopping","CommandRuntime","CurrentPSTransaction","CommandOrigin"
-"Matthew","PROD","123456788","CoreDirector","CoreDirector","Servername.com","user@domain.com","myPassword","servername.com","False","New-SGProviderCoreDirector",,"Runspace"

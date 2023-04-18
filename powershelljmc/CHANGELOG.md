@@ -10,11 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   [PowerShellJMC Support](https://eisportal.jhacorp.com/ToolsSupport/#/Request?id=10 "Request Support")
 
 # Changelog
-## [1.0.72] - 2023-03-07
+## [1.0.73] - 2023-04-07
 
-### Fixed 
-- Update ODI Provider response with url
+### Added
+- New-SGProviderYellowHammerFD cmdlet
 
+# Changelog
 ## [1.0.71] - 2023-03-01
 
 ### Fixed 
