@@ -36,11 +36,11 @@ function download-file-from-github-repo($repoPath, $repoFilename, $repoName, $re
 
 
 $temp = ([System.IO.Path]::GetTempPath())
-$zipfile = Join-Path -Path $temp -ChildPath "EWF_2021.0_Upgrade.zip"
+$zipfile = Join-Path -Path $temp -ChildPath "EWF_2023.0_Upgrade.zip"
 
 $credentials = $apiKey
 $repo = "JHAEISIS/EWF-Implementations-Install"
-$file = "EWF_2021.0_Upgrade.zip"
+$file = "EWF_2023.0_Upgrade.zip"
 
 $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
 $headers.Add("Authorization", "token $credentials")
@@ -60,11 +60,11 @@ if (($PSVersionTable.PSVersion.Major -lt 6) -or ($PSVersionTable.Platform -and $
     Unblock-File $zipfile -ErrorAction SilentlyContinue
 }
 
-$destinationFolder = $temp + 'EWF_2021.0_Upgrade'
+$destinationFolder = $temp + 'EWF_2023.0_Upgrade'
 Write-Host Extracting release files
 Expand-Archive $zipfile -DestinationPath $destinationFolder -Force
 
-$copyFolder = $temp + 'EWF_2021.0_Upgrade'
+$copyFolder = $temp + 'EWF_2023.0_Upgrade'
 Copy-Item -Path $copyFolder -Destination "C:\JX\Install Files" -Recurse -force
 
 Write-Host Cleaning up target dir
