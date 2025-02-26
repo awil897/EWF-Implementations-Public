@@ -1,0 +1,13 @@
+E:\EWF-Implementations-Public\WorkstationTests\out\bin\30da6add8ab444a58590c26b3b7c63ed\out\Invoke-JHEWFWorkstationTests.exe.config
+E:\EWF-Implementations-Public\WorkstationTests\out\bin\30da6add8ab444a58590c26b3b7c63ed\out\Invoke-JHEWFWorkstationTests.exe
+E:\EWF-Implementations-Public\WorkstationTests\out\bin\30da6add8ab444a58590c26b3b7c63ed\out\Invoke-JHEWFWorkstationTests.pdb
+E:\EWF-Implementations-Public\WorkstationTests\out\bin\30da6add8ab444a58590c26b3b7c63ed\out\Microsoft.PowerShell.ConsoleHost.dll
+E:\EWF-Implementations-Public\WorkstationTests\out\bin\30da6add8ab444a58590c26b3b7c63ed\out\System.Management.Automation.dll
+E:\EWF-Implementations-Public\WorkstationTests\out\bin\30da6add8ab444a58590c26b3b7c63ed\obj\Debug\net462\Invoke-JHEWFWorkstationTests.csproj.AssemblyReference.cache
+E:\EWF-Implementations-Public\WorkstationTests\out\bin\30da6add8ab444a58590c26b3b7c63ed\obj\Debug\net462\Invoke-JHEWFWorkstationTests.GeneratedMSBuildEditorConfig.editorconfig
+E:\EWF-Implementations-Public\WorkstationTests\out\bin\30da6add8ab444a58590c26b3b7c63ed\obj\Debug\net462\Invoke-JHEWFWorkstationTests.AssemblyInfoInputs.cache
+E:\EWF-Implementations-Public\WorkstationTests\out\bin\30da6add8ab444a58590c26b3b7c63ed\obj\Debug\net462\Invoke-JHEWFWorkstationTests.AssemblyInfo.cs
+E:\EWF-Implementations-Public\WorkstationTests\out\bin\30da6add8ab444a58590c26b3b7c63ed\obj\Debug\net462\Invoke-JHEWFWorkstationTests.csproj.CoreCompileInputs.cache
+E:\EWF-Implementations-Public\WorkstationTests\out\bin\30da6add8ab444a58590c26b3b7c63ed\obj\Debug\net462\Invoke-JHEWFWorkstationTests.csproj.CopyComplete
+E:\EWF-Implementations-Public\WorkstationTests\out\bin\30da6add8ab444a58590c26b3b7c63ed\obj\Debug\net462\Invoke-JHEWFWorkstationTests.exe
+E:\EWF-Implementations-Public\WorkstationTests\out\bin\30da6add8ab444a58590c26b3b7c63ed\obj\Debug\net462\Invoke-JHEWFWorkstationTests.pdb

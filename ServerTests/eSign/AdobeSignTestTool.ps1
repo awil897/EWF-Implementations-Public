@@ -55,13 +55,21 @@ $ListUsers = {
 		Append-ColoredLine $richText SlateGray "Getting user list"
 		
 		Try {
-			$uri = $baseUri + "api/rest/v6/users"
+			$uri = $baseUri + "api/rest/v6/users?pageSize=50"
 			$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
 			$headers.Add("Authorization", "Bearer $bearer")
 			$headers.Add("Content-Type", "application/json")
-			$userList = (Invoke-RestMethod -uri $uri -headers $headers -method Get).userInfoList
+			$userList = @()
+			do {
+				$response = (Invoke-RestMethod -uri $uri -headers $headers -method Get)
+				$userList += $response.userInfoList
+				$cursor = $response.page
+
+				if ($cursor.nextCursor) {
+					$uri = $baseUri + "api/rest/v6/users?pageSize=50&cursor=" + [uri]::EscapeDataString($cursor.nextCursor)
+				}
+			} while ($cursor.nextCursor)
 			$userList = ($userList | select-object -expandproperty email  | out-String).Trim()
-			#Append-ColoredLine $richText SlateGray "$($userlist)"
 			$richText.AppendText([Environment]::NewLine)
 			Append-ColoredLine $richText DarkGreen "User list retrieved"
 			$richText.AppendText([Environment]::NewLine)
@@ -108,12 +116,21 @@ $SearchUsers = {
 		$richText.AppendText([Environment]::NewLine)
 		Append-ColoredLine $richText SlateGray "Getting user list"
 		Try {
-			$uri = $baseUri + "api/rest/v6/users"
+			$uri = $baseUri + "api/rest/v6/users?pageSize=50"
 			$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
 			$headers.Add("Authorization", "Bearer $bearer")
 			$headers.Add("Content-Type", "application/json")
-			$userList = (Invoke-RestMethod -uri $uri -headers $headers -method Get).userInfoList
-			$userList = $userList | select-object -expandproperty email
+			$userList = @()
+			do {
+				$response = (Invoke-RestMethod -uri $uri -headers $headers -method Get)
+				$userList += $response.userInfoList
+				$cursor = $response.page
+
+				if ($cursor.nextCursor) {
+					$uri = $baseUri + "api/rest/v6/users?pageSize=50&cursor=" + [uri]::EscapeDataString($cursor.nextCursor)
+				}
+			} while ($cursor.nextCursor)
+			$userList = ($userList | select-object -expandproperty email  | out-String).Trim()
 			#Append-ColoredLine $richText SlateGray "$($userlist)"
 			$richText.AppendText([Environment]::NewLine)
 			Append-ColoredLine $richText DarkGreen "User list retrieved"
@@ -173,11 +190,20 @@ $checkUser = {
 			Append-ColoredLine $richText SlateGray "Getting user information for $($user)"
 			
 			Try {
-				$uri = $baseUri + "api/rest/v6/users"
+				$uri = $baseUri + "api/rest/v6/users?pageSize=50"
 				$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
 				$headers.Add("Authorization", "Bearer $bearer")
 				$headers.Add("Content-Type", "application/json")
-				$userList = (Invoke-RestMethod -uri $uri -headers $headers -method Get).userInfoList
+				$userList = @()
+				do {
+					$response = (Invoke-RestMethod -uri $uri -headers $headers -method Get)
+					$userList += $response.userInfoList
+					$cursor = $response.page
+
+					if ($cursor.nextCursor) {
+						$uri = $baseUri + "api/rest/v6/users?pageSize=50&cursor=" + [uri]::EscapeDataString($cursor.nextCursor)
+					}
+				} while ($cursor.nextCursor)
 				$userList = $userList | select-object email,id
 				#Append-ColoredLine $richText SlateGray "$($userlist)"
 				$richText.AppendText([Environment]::NewLine)

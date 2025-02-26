@@ -760,7 +760,10 @@ Write-Host "XCA Version - $xcaInstalled" -ForegroundColor Yellow
 Start-Sleep -Seconds 1
 
 Write-Host "`nConnectivity Test Results" -ForegroundColor Yellow
-return $testResults
+Write-Host "$($testResults | ConvertTo-Json -Depth 10 -Compress)"
+
+Write-Host "`nPress any key to continue..."
+$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 
 # SIG # Begin signature block
 # MIIvbQYJKoZIhvcNAQcCoIIvXjCCL1oCAQExDzANBglghkgBZQMEAgEFADB5Bgor

@@ -1,0 +1,64 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETFramework,Version=v4.6.2": {},
+    ".NETFramework,Version=v4.6.2/win7-x86": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    ".NETFramework,Version=v4.6.2": []
+  },
+  "packageFolders": {
+    "C:\\Users\\awillet\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "E:\\EWF-Implementations-Public\\WorkstationTests\\out\\bin\\30da6add8ab444a58590c26b3b7c63ed\\Invoke-JHEWFWorkstationTests.csproj",
+      "projectName": "Invoke-JHEWFWorkstationTests",
+      "projectPath": "E:\\EWF-Implementations-Public\\WorkstationTests\\out\\bin\\30da6add8ab444a58590c26b3b7c63ed\\Invoke-JHEWFWorkstationTests.csproj",
+      "packagesPath": "C:\\Users\\awillet\\.nuget\\packages\\",
+      "outputPath": "E:\\EWF-Implementations-Public\\WorkstationTests\\out\\bin\\30da6add8ab444a58590c26b3b7c63ed\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
+      "configFilePaths": [
+        "E:\\EWF-Implementations-Public\\WorkstationTests\\out\\bin\\30da6add8ab444a58590c26b3b7c63ed\\NuGet.Config",
+        "C:\\Users\\awillet\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net462"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net462": {
+          "targetAlias": "net462",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net462": {
+        "targetAlias": "net462",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.405\\RuntimeIdentifierGraph.json"
+      }
+    },
+    "runtimes": {
+      "win7-x86": {
+        "#import": []
+      }
+    }
+  }
+}
