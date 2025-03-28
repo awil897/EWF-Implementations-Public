@@ -116,7 +116,7 @@ function Sync-GitHubRepoContents($repoPath, $localDestination) {
                 $downloadFile = $true
             }
             if ($downloadFile) {
-                Write-Output "Downloading $($item.path)..."
+                Write-Host "Downloading $($item.path)..."
 
                 if ($isLfs) {
                     # LFS files (Bearer token, octet-stream)
