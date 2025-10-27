@@ -236,27 +236,6 @@ Start-Sleep -Seconds 1
 
 Write-Host "`nTesting connection to required websites" -ForegroundColor Yellow
 Start-Sleep -Seconds 1
-Write-Host "Checking jhadownloads.JackHenry.com"
-Try {
-    $response = (Invoke-WebRequest "https://jhadownloads.jackhenry.com" -UseBasicParsing).StatusCode
-    if ($response -like "200"){
-        $jackhenryTest = "Successful"
-        Write-Host "Success!" -ForegroundColor Green
-    }
-    else {
-    $jackhenryTest = $response
-    }
-}
-Catch {
-    Write-Host "There was an issue verifying this URL"
-    if($_.ErrorDetails.Message) {
-        $jackhenryTest = $_.ErrorDetails.Message
-    } else {
-        $jackhenryTest = $_
-    }
-    Start-Sleep -Seconds 1
-}
-Start-Sleep -Seconds 1
 Write-Host "Checking secure.JHAHosted.com"
 Try {
     $response = (Invoke-WebRequest "https://secure.jhahosted.com" -UseBasicParsing).StatusCode
