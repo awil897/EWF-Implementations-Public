@@ -25,15 +25,6 @@ Start-Process powershell.exe -Verb RunAs -ArgumentList ('-noprofile -noexit -fil
 exit $LASTEXITCODE
 }
 
-#Checking for RSAT Active Directory module, installing if needed, then importing
-If (!(Get-module -ListAvailable -Name ActiveDirectory)) {
-    Write-Host "Installing Active Directory RSAT Module"
-    Import-Module ServerManager
-    Install-WindowsFeature RSAT-AD-PowerShell
-}Else {
-    Import-Module ActiveDirectory
-}
-
 function Get-EWFUsers {
     $search = [adsisearcher]"(&(ObjectCategory=person)(ObjectClass=user)(samaccountname=*ewf*))"
     $users = $search.FindAll()
@@ -43,19 +34,23 @@ function Get-EWFUsers {
         $userArray += $SamAccountName
         $SamAccountName = $null
     }
-    $userString = $userArray -join ", "
+    $userString = $userArray # -join ", "
     return $userString
 }
 function Get-EWFGroups {
-    $search = [adsisearcher]"(&(objectCategory=group)(samaccountname=*ewf*))"
+    $search = [adsisearcher]"(&(objectCategory=group)(|(samaccountname=*ewf*)(samaccountname=JhaSMCUsers)(samaccountname=JXSystemAdministrators)))"
+    
     $groups = $search.FindAll()
     $groupsArray = @()
+    
     foreach($group in $groups) {
-        $SamAccountName = $group.Properties['SamAccountName']
-        $groupsArray += $SamAccountName
-        $SamAccountName = $null
+        $SamAccountName = $group.Properties['SamAccountName'][0]
+        if ($SamAccountName) {
+            $groupsArray += $SamAccountName
+        }
     }
-    $groupsString = $groupsArray -join ", "
+    $groupsString = $groupsArray #-join ", "
+    
     return $groupsString
 }
 function Get-SystemSpecs {  
@@ -76,12 +71,11 @@ function Get-SystemSpecs {
         $ramGB = [math]::Round($computerSystem.TotalPhysicalMemory / 1GB, 2)
         
         [void]($disks = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3")
-        $totalDiskGB = 0
-        foreach ($disk in $disks) {
-            $totalDiskGB += $disk.Size
+        $diskList = foreach ($disk in $disks) {
+            $sizeGB = [math]::Round($disk.Size / 1GB, 2)
+            "$($disk.DeviceID) $sizeGB GB"
         }
-        $totalDiskGB = [math]::Round($totalDiskGB / 1GB, 2)
-        $diskInfo = "$totalDiskGB GB (Total of all fixed drives)"
+        $diskInfo = $diskList
 
         $ipAddressObjects = [System.Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces() |
             Where-Object { $_.OperationalStatus -eq "Up" -and $_.NetworkInterfaceType -like "Ethernet" } |
@@ -162,6 +156,14 @@ function Test-CurrentUserIsAdmin {
         return $false
     }
 }
+function Get-LocalAdmins {
+    $adminGroup = [ADSI]"WinNT://./Administrators,group"
+    
+    $admins = $adminGroup.Members() | ForEach-Object {
+        $_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null)
+    }
+    return $admins
+}
 
 Write-Host "Checking if current user is an Administrator"
 Try {
@@ -173,11 +175,19 @@ Catch{
     $currentUser = "Error: $($_.Exception.Message)"
     Start-Sleep -Seconds 1
 }
-
-Write-Host "`nGetting a list of possible EWF AD Groups"
+Write-Host "Gathering members of local Adminstrators group"
+Try {
+    $admins = Get-LocalAdmins
+}
+Catch{
+    $adminsErrors = "$($_.Exception.Message)"
+    $admins = @($adminsErrors)
+    Start-Sleep -Seconds 1
+}
+Write-Host "Getting a list of possible EWF AD Groups"
 Try {
     $groupsFound = Get-EWFGroups
-    Write-Host "Success!" -ForegroundColor Green
+    Write-Host "Complete!" -ForegroundColor Green
     if ($groupsFound -like $null){
         Write-Host "No Groups Found"
         $groupsFound = "No Groups Found"
@@ -187,11 +197,10 @@ Catch {
     $groupsFound = "Error"
     Write-Host "Error while looking up EWF Groups"
 }
-
-Write-Host "`nGetting a list of possible EWF AD Users"
+Write-Host "Getting a list of possible EWF AD Users"
 Try {
     $usersFound = Get-EWFUsers
-    Write-Host "Success!" -ForegroundColor Green
+    Write-Host "Complete!" -ForegroundColor Green
     if ($usersFound -like $null){
         Write-Host "No Users Found"
         $usersFound = "No Users Found"
@@ -202,12 +211,12 @@ Catch {
     Write-Host "Error while looking up EWF Users" 
 }
 
-Write-Host "`nChecking if Webex Access is installed"
+Write-Host "Checking if Webex Access is installed"
 Try {
     $HNA = (Get-ItemProperty -Path HKLM:\SOFTWARE\WOW6432Node\WebEx\Config\RA\General -Name "HNA" -ErrorAction SilentlyContinue).HNA 
     If ($HNA -like $null){
         $HNA = "Not Installed"
-        Write-Host "Successfully Checked" -ForegroundColor Green
+        Write-Host "Complete!" -ForegroundColor Green
     }
 }
 Catch {
@@ -228,11 +237,12 @@ Write-Host "-------- System Info --------" -ForegroundColor Cyan
 $global:combinedReport = $null
 if ($null -ne $systemSpecs) {
     $global:combinedReport = [PSCustomObject]@{
-        'Is Current User Admin' = $testResults.'Is Current User Admin'
-        'Current User'          = $testResults.'Current User'
-        'EWF Users Found'       = $testResults.'EWF Users Found'
-        'EWF Groups Found'      = $testResults.'EWF Groups Found'
-        'SmartTech Entry Name'  = $testResults.'SmartTech Entry Name'
+        'Is_Admin' = $testResults.'Is Current User Admin'
+        'Current_User'          = $testResults.'Current User'
+        'Admins' = $admins
+        'EWF_Users'       = $testResults.'EWF Users Found'
+        'EWF_Groups'      = $testResults.'EWF Groups Found'
+        'SmartTech_Entry'  = $testResults.'SmartTech Entry Name'
         
         '...'                   = '...' 
 
@@ -244,7 +254,24 @@ if ($null -ne $systemSpecs) {
         'RAM'             = $systemSpecs.RAM
         'Storage'         = $systemSpecs.Storage
     }
-    $combinedReport | Format-List
+    $global:combinedReportString = [PSCustomObject]@{
+        'Is_Admin' = $testResults.'Is Current User Admin'
+        'Current_User'          = $testResults.'Current User'
+        'Admins' = $admins -join ", "
+        'EWF_Users'       = $testResults.'EWF Users Found' -join ", "
+        'EWF_Groups'      = $testResults.'EWF Groups Found' -join ", "
+        'SmartTech_Entry'  = $testResults.'SmartTech Entry Name'
+        
+        '...'                   = '...' 
+
+        'Local_IP_List'   = $systemSpecs.Local_IP_List
+        'Server_Hostname' = $systemSpecs.Server_Hostname
+        'CPU_Type'        = $systemSpecs.CPU_Type
+        'CPU_Cores'       = $systemSpecs.CPU_Cores
+        'RAM'             = $systemSpecs.RAM
+        'Storage'         = $systemSpecs.Storage -join ", "
+    }
+    $combinedReportString | Format-List
 }
 
 Write-Host "-------------------------------" -ForegroundColor Cyan
@@ -318,7 +345,7 @@ if (Test-Port443) {
         foreach ($ip in $localIPs) {
             Write-Host "Invoke-RestMethod -Uri http://$($ip):443" -ForegroundColor Green
         }
-        Write-Host "`nWaiting for connections... Press Ctrl+C to stop."
+        Write-Host "`nWaiting for connections..."
         
         while ($true) {
             try {
